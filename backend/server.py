@@ -707,6 +707,20 @@ async def contract_chat(contract_id: str, request: ChatRequest):
         if not analysis:
             raise HTTPException(status_code=404, detail="Contract not found")
         
+        # Load conversation history for this contract chat
+        chat_history = await db.contract_chats.find(
+            {"contract_id": contract_id, "session_id": request.session_id},
+            {"_id": 0}
+        ).sort("timestamp", 1).to_list(50)
+        
+        # Build conversation context
+        chat_context = ""
+        if chat_history:
+            chat_context = "\n\nPREVIOUS QUESTIONS ABOUT THIS CONTRACT:\n"
+            for msg in chat_history[-5:]:  # Last 5 messages
+                chat_context += f"User asked: {msg['user_message']}\n"
+                chat_context += f"You answered: {msg['ai_response'][:150]}...\n\n"
+        
         # Create context with contract details
         contract_context = f"""
 CONTRACT CONTEXT:
