@@ -1,0 +1,140 @@
+{
+  "identity": {
+    "name": "LegalMe",
+    "persona": "The Modern Library",
+    "tone": "Approachable Authority, Warm, Intellectual, Trustworthy",
+    "target_audience": "German residents seeking legal clarity"
+  },
+  "typography": {
+    "font_family_heading": "DM Serif Display, serif",
+    "font_family_body": "Manrope, sans-serif",
+    "font_family_code": "JetBrains Mono, monospace",
+    "scale": {
+      "h1": "text-4xl md:text-6xl font-serif tracking-tight leading-tight",
+      "h2": "text-3xl md:text-4xl font-serif tracking-tight",
+      "h3": "text-2xl font-serif tracking-normal",
+      "body": "text-base md:text-lg leading-relaxed text-stone-700",
+      "small": "text-sm font-medium tracking-wide uppercase text-stone-500"
+    },
+    "imports": [
+      "@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');"
+    ]
+  },
+  "colors": {
+    "palette": {
+      "primary": "#C2410C",
+      "primary_foreground": "#FAFAF9",
+      "secondary": "#E7E5E4",
+      "secondary_foreground": "#1C1917",
+      "background": "#FAFAF9",
+      "foreground": "#1C1917",
+      "muted": "#F5F5F4",
+      "muted_foreground": "#78716C",
+      "accent": "#FDBA74",
+      "border": "#E7E5E4",
+      "input": "#E7E5E4",
+      "ring": "#C2410C"
+    },
+    "risk_levels": {
+      "safe": {
+        "bg": "#ECFDF5",
+        "text": "#065F46",
+        "border": "#A7F3D0",
+        "icon": "🟢"
+      },
+      "attention": {
+        "bg": "#FFFBEB",
+        "text": "#92400E",
+        "border": "#FDE68A",
+        "icon": "🟡"
+      },
+      "violates": {
+        "bg": "#FEF2F2",
+        "text": "#991B1B",
+        "border": "#FECACA",
+        "icon": "🔴"
+      }
+    },
+    "css_vars": {
+      "--background": "40 20% 98%",
+      "--foreground": "24 10% 10%",
+      "--card": "0 0% 100%",
+      "--card-foreground": "24 10% 10%",
+      "--popover": "0 0% 100%",
+      "--popover-foreground": "24 10% 10%",
+      "--primary": "24 89% 40%",
+      "--primary-foreground": "40 20% 98%",
+      "--secondary": "40 10% 90%",
+      "--secondary-foreground": "24 10% 10%",
+      "--muted": "40 10% 96%",
+      "--muted-foreground": "24 5% 45%",
+      "--accent": "30 90% 72%",
+      "--accent-foreground": "24 10% 10%",
+      "--destructive": "0 84% 60%",
+      "--destructive-foreground": "0 0% 98%",
+      "--border": "40 10% 90%",
+      "--input": "40 10% 90%",
+      "--ring": "24 89% 40%",
+      "--radius": "0.75rem"
+    }
+  },
+  "layout_strategies": {
+    "home_screen": {
+      "type": "Tetris Grid",
+      "structure": "grid grid-cols-1 md:grid-cols-12 gap-6 p-6 md:p-12 max-w-7xl mx-auto",
+      "hero_section": "col-span-1 md:col-span-8 row-span-2 bg-stone-900 text-stone-50 rounded-3xl p-8 md:p-12 flex flex-col justify-between relative overflow-hidden",
+      "action_card": "col-span-1 md:col-span-4 bg-white border border-stone-200 rounded-3xl p-8 hover:shadow-xl transition-all duration-300 group cursor-pointer",
+      "topic_card": "col-span-1 md:col-span-3 h-48 relative rounded-2xl overflow-hidden group cursor-pointer"
+    },
+    "chat_interface": {
+      "type": "Central Focus",
+      "container": "max-w-3xl mx-auto h-[calc(100vh-4rem)] flex flex-col bg-white shadow-2xl shadow-stone-200/50 rounded-t-3xl border-x border-t border-stone-100",
+      "message_bubble_user": "bg-stone-100 text-stone-900 rounded-2xl rounded-tr-sm px-6 py-4 max-w-[85%] self-end mb-4",
+      "message_bubble_ai": "bg-white border border-stone-100 text-stone-800 rounded-2xl rounded-tl-sm px-6 py-6 max-w-[95%] self-start mb-6 shadow-sm prose prose-stone prose-headings:font-serif prose-a:text-orange-700 prose-a:no-underline hover:prose-a:underline"
+    },
+    "contract_analysis": {
+      "type": "Control Room Split",
+      "container": "grid grid-cols-1 lg:grid-cols-12 gap-0 h-screen overflow-hidden",
+      "document_panel": "col-span-1 lg:col-span-7 bg-stone-50 p-8 overflow-y-auto border-r border-stone-200",
+      "analysis_panel": "col-span-1 lg:col-span-5 bg-white p-0 flex flex-col h-full"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-primary text-primary-foreground hover:bg-orange-800 h-12 px-8 rounded-full font-medium transition-all shadow-lg shadow-orange-900/20 hover:shadow-orange-900/30 hover:-translate-y-0.5",
+      "secondary": "bg-white border-2 border-stone-200 text-stone-700 hover:border-stone-900 hover:text-stone-900 h-12 px-8 rounded-full font-medium transition-all",
+      "ghost": "hover:bg-stone-100 text-stone-600 hover:text-stone-900 h-10 px-4 rounded-lg"
+    },
+    "cards": {
+      "base": "bg-white border border-stone-100 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300",
+      "interactive": "cursor-pointer hover:border-orange-200 hover:ring-1 hover:ring-orange-200"
+    },
+    "inputs": {
+      "base": "bg-stone-50 border-stone-200 focus:border-orange-500 focus:ring-orange-500/20 rounded-xl h-12 px-4 transition-all"
+    }
+  },
+  "visual_assets": {
+    "images": {
+      "hero_bg": "https://images.unsplash.com/photo-1760597371592-09e901b7317d?q=80&w=2000&auto=format&fit=crop",
+      "topic_rental": "https://images.unsplash.com/photo-1649646861831-8225fa368f86?q=80&w=800&auto=format&fit=crop",
+      "topic_job": "https://images.unsplash.com/photo-1760236963218-424a715d1816?q=80&w=800&auto=format&fit=crop",
+      "topic_tax": "https://images.unsplash.com/photo-1649209979970-f01d950cc5ed?q=80&w=800&auto=format&fit=crop",
+      "topic_subscription": "https://images.unsplash.com/photo-1651641049161-5051c910241d?q=80&w=800&auto=format&fit=crop"
+    },
+    "icons": "Use 'lucide-react' with stroke-width={1.5} for a refined look."
+  },
+  "motion": {
+    "page_transition": "initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}",
+    "hover_lift": "whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 300 }}"
+  },
+  "universal_guidelines": [
+    "DO NOT use gradients for backgrounds. Use solid warm colors or subtle noise textures.",
+    "Ensure all text has sufficient contrast (APCA standards).",
+    "Use 'DM Serif Display' ONLY for H1 and H2. Use 'Manrope' for everything else.",
+    "Interactive elements must have a 'data-testid' attribute.",
+    "For the Chat Interface, use 'react-markdown' with 'remark-gfm' to render the Cursor-style formatting.",
+    "Contract Analysis reports must use the 'risk_levels' color coding for visual scanning.",
+    "NO BLUE or GREEN in the main UI chrome (except for specific 'Safe' risk indicators in the report)."
+  ],
+  "instructions_to_main_agent": "1. Update 'tailwind.config.js' with the provided colors and font families. 2. Add the Google Fonts import to 'index.css'. 3. Create a 'Layout' component that enforces the max-width and background color. 4. Build the 'Home' page using the 'Tetris Grid' layout. 5. Implement the Chat interface with Markdown support. 6. Ensure the 'Contract Analysis' page uses the split-screen layout."
+}
