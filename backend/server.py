@@ -513,8 +513,9 @@ def chunk_text(text: str, chunk_size: int = 3000) -> list:
 
 def extract_text_from_file(content: bytes, filename: str) -> tuple:
     """
-    Extract text from various file types (PDF, DOCX, TXT, Images)
+    Extract text from ANY file type (PDF, DOCX, TXT, Images, XLSX, PPTX, etc.)
     Returns: (extracted_text, page_count)
+    Handles files of any size with chunking and OCR
     """
     file_ext = filename.lower().split('.')[-1]
     
@@ -544,27 +545,92 @@ def extract_text_from_file(content: bytes, filename: str) -> tuple:
             return extracted_text, page_count
         
         # DOCX files
-        elif file_ext == 'docx':
+        elif file_ext in ['docx', 'doc']:
             doc = Document(io.BytesIO(content))
             extracted_text = "\n".join([para.text for para in doc.paragraphs])
-            return extracted_text, len(doc.paragraphs) // 20 or 1  # Estimate pages
+            # Also extract from tables
+            for table in doc.tables:
+                for row in table.rows:
+                    for cell in row.cells:
+                        extracted_text += "\n" + cell.text
+            return extracted_text, len(doc.paragraphs) // 20 or 1
         
-        # TXT files
-        elif file_ext == 'txt':
-            extracted_text = content.decode('utf-8', errors='ignore')
-            return extracted_text, len(extracted_text) // 3000 or 1  # Estimate pages
+        # Excel files
+        elif file_ext in ['xlsx', 'xls']:
+            wb = load_workbook(io.BytesIO(content), data_only=True)
+            extracted_text = ""
+            for sheet in wb.worksheets:
+                extracted_text += f"\n--- Sheet: {sheet.title} ---\n"
+                for row in sheet.iter_rows(values_only=True):
+                    row_text = " | ".join([str(cell) if cell else "" for cell in row])
+                    extracted_text += row_text + "\n"
+            return extracted_text, len(wb.worksheets)
         
-        # Image files (JPG, PNG, JPEG)
-        elif file_ext in ['jpg', 'jpeg', 'png', 'bmp', 'tiff']:
-            image = Image.open(io.BytesIO(content))
-            extracted_text = pytesseract.image_to_string(image)
+        # PowerPoint files
+        elif file_ext in ['pptx', 'ppt']:
+            prs = Presentation(io.BytesIO(content))
+            extracted_text = ""
+            for i, slide in enumerate(prs.slides):
+                extracted_text += f"\n--- Slide {i+1} ---\n"
+                for shape in slide.shapes:
+                    if hasattr(shape, "text"):
+                        extracted_text += shape.text + "\n"
+            return extracted_text, len(prs.slides)
+        
+        # OpenDocument files
+        elif file_ext in ['odt', 'ods']:
+            doc = odf_load(io.BytesIO(content))
+            extracted_text = ""
+            for para in doc.getElementsByType(odf_text.P):
+                extracted_text += teletype.extractText(para) + "\n"
             return extracted_text, 1
         
+        # TXT and other text files
+        elif file_ext in ['txt', 'log', 'md', 'rtf', 'csv']:
+            try:
+                extracted_text = content.decode('utf-8', errors='ignore')
+            except:
+                extracted_text = content.decode('latin-1', errors='ignore')
+            return extracted_text, len(extracted_text) // 3000 or 1
+        
+        # All image files with OCR
+        elif file_ext in ['jpg', 'jpeg', 'png', 'bmp', 'tiff', 'tif', 'gif', 'webp', 'heic', 'heif']:
+            logging.info(f"Processing image file with OCR: {file_ext}")
+            image = Image.open(io.BytesIO(content))
+            # Convert to RGB if needed
+            if image.mode in ('RGBA', 'LA', 'P'):
+                image = image.convert('RGB')
+            extracted_text = pytesseract.image_to_string(image)
+            logging.info(f"OCR extracted {len(extracted_text)} characters from image")
+            return extracted_text, 1
+        
+        # Fallback: Try to extract as text or use OCR
         else:
-            raise HTTPException(status_code=400, detail=f"Unsupported file type: {file_ext}")
+            logging.warning(f"Unknown file type: {file_ext}, attempting extraction...")
+            # Try as text first
+            try:
+                extracted_text = content.decode('utf-8', errors='ignore')
+                if len(extracted_text.strip()) > 50:
+                    return extracted_text, 1
+            except:
+                pass
+            
+            # Try as image with OCR
+            try:
+                image = Image.open(io.BytesIO(content))
+                extracted_text = pytesseract.image_to_string(image)
+                if len(extracted_text.strip()) > 10:
+                    logging.info(f"Fallback OCR succeeded for {file_ext}")
+                    return extracted_text, 1
+            except:
+                pass
+            
+            raise HTTPException(status_code=400, detail=f"Could not extract text from {file_ext} file. The file may be corrupted or in an unsupported format.")
     
+    except HTTPException:
+        raise
     except Exception as e:
-        logging.error(f"Text extraction error: {str(e)}")
+        logging.error(f"Text extraction error for {file_ext}: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Could not extract text from file: {str(e)}")
 
 @api_router.post("/contract/analyze")
