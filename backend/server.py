@@ -437,10 +437,10 @@ async def analyze_contract(file: UploadFile = File(...)):
         else:
             risk_level = "low"
         
-        # Generate AI summary using Gemini
+        # Generate AI summary using Gemini with intent detection
         law_context = "\n".join([f"- {law['title']}: {law['description']}" for law in LAW_DATABASE])
         summary_prompt = f"""Analyze this contract and provide:
-1. Document type (rental/employment/subscription/other)
+1. Document type - Choose ONE: rental, employment, subscription, immigration, tax, other
 2. A 3-5 sentence summary
 3. Key recommendations
 
@@ -450,8 +450,8 @@ Contract text:
 Available laws:
 {law_context}
 
-Provide response in this format:
-TYPE: [type]
+Provide response in this EXACT format:
+TYPE: [rental/employment/subscription/immigration/tax/other]
 SUMMARY: [summary]
 RECOMMENDATIONS: [recommendations]"""
         
