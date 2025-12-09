@@ -5,10 +5,12 @@ import { MessageSquare, X, Clock, Plus, Edit2, Trash2, Menu } from 'lucide-react
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const ChatHistory = ({ onSelectSession, currentSessionId }) => {
+const ChatHistory = ({ onSelectSession, currentSessionId, onNewChat }) => {
   const [sessions, setSessions] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [editName, setEditName] = useState('');
 
   useEffect(() => {
     loadHistory();
