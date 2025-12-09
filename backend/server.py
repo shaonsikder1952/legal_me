@@ -578,6 +578,36 @@ async def get_session_messages(session_id: str):
         logging.error(f"Session messages error: {str(e)}")
         return []
 
+@api_router.put("/chat/{session_id}/rename")
+async def rename_session(session_id: str, request: dict):
+    """Rename a chat session"""
+    try:
+        new_name = request.get("name", "")
+        if not new_name:
+            raise HTTPException(status_code=400, detail="Name is required")
+        
+        result = await db.chat_messages.update_many(
+            {"session_id": session_id},
+            {"$set": {"session_name": new_name}}
+        )
+        
+        return {"success": True, "updated": result.modified_count}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Rename session error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/chat/{session_id}")
+async def delete_session(session_id: str):
+    """Delete a chat session"""
+    try:
+        result = await db.chat_messages.delete_many({"session_id": session_id})
+        return {"success": True, "deleted": result.deleted_count}
+    except Exception as e:
+        logging.error(f"Delete session error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.post("/contract/{contract_id}/chat", response_model=ChatResponse)
 async def contract_chat(contract_id: str, request: ChatRequest):
     """Chat about a specific contract"""
