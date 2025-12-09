@@ -100,9 +100,9 @@ const HomePage = () => {
               <div className="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-200">
                 <FileUp className="w-7 h-7 text-orange-700" strokeWidth={1.5} />
               </div>
-              <h2 className="font-serif text-3xl md:text-4xl mb-3 text-stone-900">Upload Contract</h2>
+              <h2 className="font-serif text-3xl md:text-4xl mb-3 text-stone-900">Upload Document</h2>
               <p className="text-stone-600 leading-relaxed">
-                Analyze any contract or legal document for risky clauses and legal violations.
+                Analyze any legal document for risky clauses and legal violations.
               </p>
             </div>
             <div className="mt-6">
