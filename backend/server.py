@@ -120,30 +120,104 @@ CLAUSE_DATABASE = [
     }
 ]
 
-# Alternative Resources
-ALTERNATIVE_DATABASE = [
-    {
-        "category": "rental",
-        "resources": [
-            {"name": "Mieterschutzbund", "url": "https://www.mieterschutzbund.de"},
-            {"name": "Safe Rental Templates", "url": "https://www.immobilienscout24.de/ratgeber"}
+# Comprehensive Trusted Resources Database
+TRUSTED_LINKS_DATABASE = {
+    "rental": {
+        "authorities": [
+            {"name": "Tenant Protection Association (Mieterschutzbund)", "url": "https://www.mieterschutzbund.de"},
+            {"name": "Berlin Tenant Advisory Service", "url": "https://www.berlin.de/sen/stadtentwicklung/wohnen/mieterschutz/"},
+            {"name": "Hamburg Tenant Advisory", "url": "https://www.hamburg.de/mieterberatung/"}
+        ],
+        "alternatives": [
+            {"name": "Safer rental listings on ImmobilienScout24", "url": "https://www.immobilienscout24.de"},
+            {"name": "Fair rental contract templates", "url": "https://www.mietrecht.de/mustervertrag/"},
+            {"name": "Rental law information portal", "url": "https://www.mietrecht.de"}
+        ],
+        "report": [
+            {"name": "Report unfair rental practices", "url": "https://www.verbraucherzentrale.de/beschwerde"},
+            {"name": "File complaint with tenant association", "url": "https://www.mieterbund.de/beratung.html"}
         ]
     },
-    {
-        "category": "employment",
-        "resources": [
-            {"name": "Arbeitsagentur", "url": "https://www.arbeitsagentur.de"},
-            {"name": "DGB (Labor Union)", "url": "https://www.dgb.de"}
+    "employment": {
+        "authorities": [
+            {"name": "Federal Employment Agency (Bundesagentur für Arbeit)", "url": "https://www.arbeitsagentur.de"},
+            {"name": "DGB Labor Union", "url": "https://www.dgb.de"},
+            {"name": "Employee Rights Information", "url": "https://www.bmas.de/DE/Arbeit/Arbeitsrecht/arbeitsrecht.html"}
+        ],
+        "alternatives": [
+            {"name": "Fair employment contract templates", "url": "https://www.arbeitsvertrag.org"},
+            {"name": "Job search on Federal Employment Agency", "url": "https://www.arbeitsagentur.de/jobsuche/"},
+            {"name": "Employment rights guide", "url": "https://www.dgb.de/themen/arbeitsrecht"}
+        ],
+        "report": [
+            {"name": "Report unfair dismissal", "url": "https://www.dgb.de/service/kontakt"},
+            {"name": "File workplace complaint", "url": "https://www.bmas.de/DE/Service/Kontakt/kontakt.html"}
         ]
     },
-    {
-        "category": "general",
-        "resources": [
-            {"name": "Verbraucherzentrale", "url": "https://www.verbraucherzentrale.de"},
-            {"name": "Report Issues", "url": "https://www.verbraucherzentrale.de/beschwerde"}
+    "immigration": {
+        "authorities": [
+            {"name": "Immigration Office Berlin", "url": "https://service.berlin.de/dienstleistung/324284/"},
+            {"name": "Federal Office for Migration (BAMF)", "url": "https://www.bamf.de"},
+            {"name": "Make Your Way in Germany", "url": "https://www.make-it-in-germany.com"}
+        ],
+        "alternatives": [
+            {"name": "Visa and residence permit guide", "url": "https://www.germany.info/us-en/service/visa"},
+            {"name": "Integration courses", "url": "https://www.bamf.de/EN/Themen/Integration/integration_node.html"},
+            {"name": "Recognition of foreign qualifications", "url": "https://www.anerkennung-in-deutschland.de/html/en/"}
+        ],
+        "report": [
+            {"name": "Immigration consultation services", "url": "https://www.bamf.de/EN/Service/ServiceCenter/servicecenter-node.html"},
+            {"name": "Legal advice for migrants", "url": "https://www.diakonie.de/angebote-und-hilfe/migration-und-integration"}
+        ]
+    },
+    "subscription": {
+        "authorities": [
+            {"name": "Consumer Protection Center (Verbraucherzentrale)", "url": "https://www.verbraucherzentrale.de"},
+            {"name": "German Consumer Protection Portal", "url": "https://www.verbraucher.de"}
+        ],
+        "alternatives": [
+            {"name": "Fair subscription comparison", "url": "https://www.vergleich.de"},
+            {"name": "Cancel subscriptions properly", "url": "https://www.verbraucherzentrale.de/wissen/vertraege-reklamation/kundenrechte/so-kuendigen-sie-richtig-6892"},
+            {"name": "Subscription trap warning list", "url": "https://www.verbraucherzentrale.de/wissen/digitale-welt/onlinedienste/abofallen-im-internet-was-tun-5147"}
+        ],
+        "report": [
+            {"name": "Report subscription scams", "url": "https://www.verbraucherzentrale.de/beschwerde"},
+            {"name": "File complaint about unfair contracts", "url": "https://www.bundesnetzagentur.de/DE/Vportal/Verbraucher/Beschwerde/beschwerde-node.html"}
+        ]
+    },
+    "tax": {
+        "authorities": [
+            {"name": "German Tax Office (Finanzamt)", "url": "https://www.finanzamt.de"},
+            {"name": "Federal Ministry of Finance", "url": "https://www.bundesfinanzministerium.de"},
+            {"name": "Tax advisor search", "url": "https://www.steuerkanzlei.de"}
+        ],
+        "alternatives": [
+            {"name": "Tax declaration help", "url": "https://www.elster.de"},
+            {"name": "Tax calculator", "url": "https://www.bmf-steuerrechner.de"},
+            {"name": "Tax deduction guide", "url": "https://www.finanztip.de/steuererklaerung/"}
+        ],
+        "report": [
+            {"name": "Tax consultation services", "url": "https://www.finanzamt.de/beratung"},
+            {"name": "Report tax fraud", "url": "https://www.bundesfinanzministerium.de/Web/DE/Service/Kontakt/kontakt.html"}
+        ]
+    },
+    "general": {
+        "authorities": [
+            {"name": "Consumer Protection Center", "url": "https://www.verbraucherzentrale.de"},
+            {"name": "German Legal Portal", "url": "https://www.gesetze-im-internet.de"},
+            {"name": "Federal Ministry of Justice", "url": "https://www.bmjv.de"}
+        ],
+        "alternatives": [
+            {"name": "Legal advice directory", "url": "https://www.anwaltauskunft.de"},
+            {"name": "Free legal help", "url": "https://www.rechtshilfe.de"},
+            {"name": "Official forms and templates", "url": "https://www.formulare-bfinv.de"}
+        ],
+        "report": [
+            {"name": "General complaint portal", "url": "https://www.verbraucherzentrale.de/beschwerde"},
+            {"name": "File consumer complaint", "url": "https://www.bundesnetzagentur.de/DE/Vportal/Verbraucher/Beschwerde/beschwerde-node.html"}
         ]
     }
-]
+}
 
 # Pydantic Models
 class ChatMessage(BaseModel):
