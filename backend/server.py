@@ -303,9 +303,13 @@ class ContractAnalysis(BaseModel):
     extracted_text: str
     document_type: str
     risk_level: str
+    risk_confidence: int
+    scam_confidence: int
+    legal_risk_confidence: int
     page_count: int
     is_likely_scam: bool
     scam_indicators: List[dict]
+    risk_explanation: str
     clauses_safe: List[dict]
     clauses_attention: List[dict]
     clauses_violates: List[dict]
