@@ -206,27 +206,32 @@ const ContractAnalysis = () => {
     }
   };
 
-  const getRiskBadge = (level) => {
+  const getRiskBadge = (level, confidence) => {
     const styles = {
-      scam: 'bg-red-600 text-white border-red-800 animate-pulse',
-      high: 'bg-red-50 text-red-700 border-red-300',
-      'medium-high': 'bg-orange-50 text-orange-700 border-orange-300',
-      medium: 'bg-yellow-50 text-yellow-700 border-yellow-300',
-      'medium-low': 'bg-blue-50 text-blue-700 border-blue-300',
-      low: 'bg-green-50 text-green-700 border-green-300'
+      scam: 'bg-red-600 text-white border-red-800 animate-pulse shadow-lg shadow-red-500/50',
+      high: 'bg-red-50 text-red-700 border-red-400',
+      medium: 'bg-yellow-50 text-yellow-700 border-yellow-400',
+      low: 'bg-blue-50 text-blue-700 border-blue-400',
+      safe: 'bg-green-600 text-white border-green-700 shadow-lg'
     };
     const labels = { 
       scam: '🚨 SCAM DETECTED', 
       high: '🔴 High Risk', 
-      'medium-high': '🟠 Medium-High Risk',
       medium: '🟡 Medium Risk',
-      'medium-low': '🔵 Medium-Low Risk',
-      low: '🟢 Low Risk' 
+      low: '🟢 Low Risk',
+      safe: '✅ SAFE DOCUMENT'
     };
     return (
-      <span className={`px-4 py-2 rounded-full text-sm font-bold border-2 ${styles[level]}`}>
-        {labels[level]}
-      </span>
+      <div className="flex items-center gap-3">
+        <span className={`px-5 py-3 rounded-full text-base font-bold border-2 ${styles[level]}`}>
+          {labels[level]}
+        </span>
+        {confidence && (
+          <span className="px-3 py-1 bg-stone-100 text-stone-700 rounded-full text-sm font-medium">
+            {confidence}% Confidence
+          </span>
+        )}
+      </div>
     );
   };
 
