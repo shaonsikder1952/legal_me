@@ -6,11 +6,102 @@ import { ArrowLeft, Upload, FileText, Loader2, AlertTriangle, CheckCircle, Alert
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+// Dynamic Next Steps based on document type
+const NEXT_STEPS_CONFIG = {
+  rental: {
+    authority: {
+      text: 'Get tenant protection help',
+      link: 'https://www.mieterschutzbund.de',
+      linkText: 'Tenant Protection Association'
+    },
+    alternative: {
+      text: 'View safer rental options',
+      link: 'https://www.immobilienscout24.de',
+      linkText: 'Browse fair rental listings'
+    }
+  },
+  employment: {
+    authority: {
+      text: 'Contact employment agency',
+      link: 'https://www.arbeitsagentur.de',
+      linkText: 'Federal Employment Agency'
+    },
+    alternative: {
+      text: 'Get employment rights guidance',
+      link: 'https://www.dgb.de',
+      linkText: 'Labor union resources'
+    }
+  },
+  immigration: {
+    authority: {
+      text: 'Contact immigration office',
+      link: 'https://service.berlin.de/dienstleistung/324284/',
+      linkText: 'Immigration Office Berlin'
+    },
+    alternative: {
+      text: 'Get visa guidance',
+      link: 'https://www.bamf.de',
+      linkText: 'Federal Migration Office'
+    }
+  },
+  subscription: {
+    authority: {
+      text: 'Report subscription issue',
+      link: 'https://www.verbraucherzentrale.de/beschwerde',
+      linkText: 'Consumer protection complaint'
+    },
+    alternative: {
+      text: 'Learn proper cancellation',
+      link: 'https://www.verbraucherzentrale.de/wissen/vertraege-reklamation/kundenrechte/so-kuendigen-sie-richtig-6892',
+      linkText: 'Cancellation guide'
+    }
+  },
+  tax: {
+    authority: {
+      text: 'Get tax consultation',
+      link: 'https://www.finanzamt.de',
+      linkText: 'German Tax Office'
+    },
+    alternative: {
+      text: 'Use tax declaration portal',
+      link: 'https://www.elster.de',
+      linkText: 'ELSTER tax portal'
+    }
+  },
+  general: {
+    authority: {
+      text: 'Get legal advice',
+      link: 'https://www.verbraucherzentrale.de',
+      linkText: 'Consumer Protection Center'
+    },
+    alternative: {
+      text: 'Find legal help',
+      link: 'https://www.anwaltauskunft.de',
+      linkText: 'Lawyer directory'
+    }
+  }
+};
+
 const ContractAnalysis = () => {
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [analysis, setAnalysis] = useState(null);
+
+  const getNextStepText = (docType, stepType) => {
+    const config = NEXT_STEPS_CONFIG[docType] || NEXT_STEPS_CONFIG.general;
+    return config[stepType]?.text || NEXT_STEPS_CONFIG.general[stepType].text;
+  };
+
+  const getNextStepLink = (docType, stepType) => {
+    const config = NEXT_STEPS_CONFIG[docType] || NEXT_STEPS_CONFIG.general;
+    return config[stepType]?.link || NEXT_STEPS_CONFIG.general[stepType].link;
+  };
+
+  const getNextStepLinkText = (docType, stepType) => {
+    const config = NEXT_STEPS_CONFIG[docType] || NEXT_STEPS_CONFIG.general;
+    return config[stepType]?.linkText || NEXT_STEPS_CONFIG.general[stepType].linkText;
+  };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
