@@ -495,9 +495,12 @@ const ContractAnalysis = () => {
                 <p className="text-sm text-stone-500 mb-1">Type</p>
                 <p className="font-medium text-stone-900 capitalize">{analysis.document_type}</p>
               </div>
-              <div className="p-4 bg-stone-50 rounded-xl">
-                <p className="text-sm text-stone-500 mb-1">Risk Level</p>
-                <div className="mt-2">{getRiskBadge(analysis.risk_level)}</div>
+              <div className="p-4 bg-stone-50 rounded-xl col-span-2">
+                <p className="text-sm text-stone-500 mb-1">Risk Level (AI-Powered)</p>
+                <div className="mt-2">{getRiskBadge(analysis.risk_level, analysis.risk_confidence)}</div>
+                {analysis.risk_explanation && (
+                  <p className="text-xs text-stone-600 mt-2 italic">{analysis.risk_explanation}</p>
+                )}
               </div>
               <div className="p-4 bg-stone-50 rounded-xl">
                 <p className="text-sm text-stone-500 mb-1">Filename</p>
