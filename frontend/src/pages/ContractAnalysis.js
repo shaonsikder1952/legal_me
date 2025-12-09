@@ -117,22 +117,8 @@ const ContractAnalysis = () => {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      const validTypes = [
-        'application/pdf',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'text/plain',
-        'image/jpeg',
-        'image/jpg',
-        'image/png'
-      ];
-      const fileExt = selectedFile.name.toLowerCase().split('.').pop();
-      const validExts = ['pdf', 'docx', 'txt', 'jpg', 'jpeg', 'png'];
-      
-      if (validTypes.includes(selectedFile.type) || validExts.includes(fileExt)) {
-        setFile(selectedFile);
-      } else {
-        alert('Please select a PDF, DOCX, TXT, or image file (JPG, PNG)');
-      }
+      // Accept any file - backend will handle extraction
+      setFile(selectedFile);
     }
   };
 
