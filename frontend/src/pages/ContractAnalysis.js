@@ -260,11 +260,11 @@ const ContractAnalysis = () => {
               </div>
               
               <h2 className="font-serif text-2xl text-stone-900 mb-3">Upload Your Document</h2>
-              <p className="text-stone-600 mb-6">PDF files only, any size supported</p>
+              <p className="text-stone-600 mb-6">Supports: PDF, DOCX, TXT, Images (JPG, PNG)</p>
 
               <input
                 type="file"
-                accept="application/pdf"
+                accept="application/pdf,.pdf,.docx,.txt,.jpg,.jpeg,.png,image/*"
                 onChange={handleFileChange}
                 className="hidden"
                 id="file-upload"
