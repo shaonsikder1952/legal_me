@@ -141,7 +141,8 @@ const ContractAnalysis = () => {
       setAnalysis(response.data);
     } catch (error) {
       console.error('Upload error:', error);
-      alert('Error analyzing contract. Please try again.');
+      const errorMessage = error.response?.data?.detail || 'Error analyzing document. Please ensure it is a valid PDF file and try again.';
+      alert(errorMessage);
     } finally {
       setUploading(false);
     }
