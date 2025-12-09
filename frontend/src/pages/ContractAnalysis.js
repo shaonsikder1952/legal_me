@@ -96,6 +96,7 @@ const ContractAnalysis = () => {
   const [chatLoading, setChatLoading] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [chatSessionId] = useState(() => `contract_chat_${Date.now()}`);
+  const [typingMessageIndex, setTypingMessageIndex] = useState(null);
   const chatEndRef = useRef(null);
 
   const getNextStepText = (docType, stepType) => {
