@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { ArrowLeft, Upload, FileText, Loader2, AlertTriangle, CheckCircle, AlertCircle, Download, Send, MessageCircle } from 'lucide-react';
+import TypingAnimation from '../components/TypingAnimation';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
