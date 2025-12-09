@@ -68,7 +68,9 @@ const Chat = () => {
         message: textToSend
       });
 
-      setMessages(prev => [...prev, { role: 'assistant', content: response.data.response }]);
+      const newMessage = { role: 'assistant', content: response.data.response, isTyping: true };
+      setMessages(prev => [...prev, newMessage]);
+      setTypingMessageIndex(messages.length + 1);
     } catch (error) {
       console.error('Chat error:', error);
       setMessages(prev => [
