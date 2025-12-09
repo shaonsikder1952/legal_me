@@ -480,6 +480,27 @@ CRITICAL MEMORY RULES:
         logging.error(f"Chat error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+def chunk_text(text: str, chunk_size: int = 3000) -> list:
+    """Split text into manageable chunks for analysis"""
+    words = text.split()
+    chunks = []
+    current_chunk = []
+    current_length = 0
+    
+    for word in words:
+        current_length += len(word) + 1
+        if current_length > chunk_size:
+            chunks.append(' '.join(current_chunk))
+            current_chunk = [word]
+            current_length = len(word)
+        else:
+            current_chunk.append(word)
+    
+    if current_chunk:
+        chunks.append(' '.join(current_chunk))
+    
+    return chunks
+
 @api_router.post("/contract/analyze")
 async def analyze_contract(file: UploadFile = File(...)):
     try:
@@ -488,11 +509,15 @@ async def analyze_contract(file: UploadFile = File(...)):
         pdf_reader = PdfReader(io.BytesIO(content))
         
         extracted_text = ""
+        page_count = len(pdf_reader.pages)
+        
         for page in pdf_reader.pages:
             extracted_text += page.extract_text() + "\n"
         
         if not extracted_text.strip():
             raise HTTPException(status_code=400, detail="Could not extract text from PDF")
+        
+        logging.info(f"Extracted {len(extracted_text)} characters from {page_count} pages")
         
         # Analyze clauses
         clauses_safe = []
