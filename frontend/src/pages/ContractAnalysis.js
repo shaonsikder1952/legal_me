@@ -407,7 +407,7 @@ const ContractAnalysis = () => {
           {/* Title */}
           <div className="mb-8 flex items-start justify-between">
             <div>
-              <h1 className="font-serif text-4xl md:text-5xl text-stone-900 mb-4">LegalMe Contract Review Report</h1>
+              <h1 className="font-serif text-4xl md:text-5xl text-stone-900 mb-4">LegalMe Legal Document Analysis Report</h1>
               <div className="h-1 w-24 bg-orange-600 rounded mb-6"></div>
             </div>
             <button
