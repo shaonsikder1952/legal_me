@@ -14,9 +14,7 @@ from emergentintegrations.llm.chat import LlmChat, UserMessage
 from PyPDF2 import PdfReader
 import io
 import re
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
+from pdf_generator import generate_contract_pdf
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
