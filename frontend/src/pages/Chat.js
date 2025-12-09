@@ -100,14 +100,16 @@ const Chat = () => {
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate('/')}
-              className="w-10 h-10 rounded-full hover:bg-stone-100 flex items-center justify-center"
+              className="flex items-center gap-2 text-stone-600 hover:text-stone-900 font-medium"
               data-testid="back-button"
             >
-              <ArrowLeft className="w-5 h-5 text-stone-600" />
+              <ArrowLeft className="w-5 h-5" />
+              <span className="hidden md:inline">Back</span>
             </button>
+            <div className="h-6 w-px bg-stone-200"></div>
             <div>
-              <h1 className="font-serif text-2xl text-stone-900">LegalMe Chat</h1>
-              <p className="text-sm text-stone-500">Ask any legal question</p>
+              <h1 className="font-serif text-xl md:text-2xl text-stone-900">LegalMe Chat</h1>
+              <p className="text-xs md:text-sm text-stone-500">Ask any legal question</p>
             </div>
           </div>
         </div>
