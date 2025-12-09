@@ -312,10 +312,11 @@ const ContractAnalysis = () => {
         {/* Chat Toggle Button */}
         <button
           onClick={() => setShowChat(!showChat)}
-          className="fixed bottom-6 right-6 w-16 h-16 bg-orange-700 text-white rounded-full shadow-lg hover:bg-orange-800 flex items-center justify-center z-50"
+          className="fixed bottom-6 right-6 bg-orange-700 text-white rounded-full shadow-lg hover:bg-orange-800 flex items-center justify-center gap-2 z-50 px-5 py-4"
           data-testid="toggle-contract-chat"
         >
-          <MessageCircle className="w-7 h-7" />
+          <MessageCircle className="w-6 h-6" />
+          <span className="font-medium text-sm hidden md:inline">Ask AI</span>
         </button>
 
         {/* Chat Panel */}
