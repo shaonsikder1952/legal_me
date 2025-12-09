@@ -208,13 +208,23 @@ const ContractAnalysis = () => {
 
   const getRiskBadge = (level) => {
     const styles = {
-      high: 'bg-red-50 text-red-700 border-red-200',
-      medium: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-      low: 'bg-green-50 text-green-700 border-green-200'
+      scam: 'bg-red-600 text-white border-red-800 animate-pulse',
+      high: 'bg-red-50 text-red-700 border-red-300',
+      'medium-high': 'bg-orange-50 text-orange-700 border-orange-300',
+      medium: 'bg-yellow-50 text-yellow-700 border-yellow-300',
+      'medium-low': 'bg-blue-50 text-blue-700 border-blue-300',
+      low: 'bg-green-50 text-green-700 border-green-300'
     };
-    const labels = { high: '🔴 High Risk', medium: '🟡 Medium Risk', low: '🟢 Low Risk' };
+    const labels = { 
+      scam: '🚨 SCAM DETECTED', 
+      high: '🔴 High Risk', 
+      'medium-high': '🟠 Medium-High Risk',
+      medium: '🟡 Medium Risk',
+      'medium-low': '🔵 Medium-Low Risk',
+      low: '🟢 Low Risk' 
+    };
     return (
-      <span className={`px-4 py-2 rounded-full text-sm font-medium border ${styles[level]}`}>
+      <span className={`px-4 py-2 rounded-full text-sm font-bold border-2 ${styles[level]}`}>
         {labels[level]}
       </span>
     );
