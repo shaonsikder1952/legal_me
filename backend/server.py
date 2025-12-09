@@ -817,24 +817,39 @@ RISK_EXPLANATION: [2-3 sentence summary of why this risk level]"""
                     elif clause_pattern["risk"] == "violates":
                         clauses_violates.append(clause_info)
         
-        # Determine overall risk - Dynamic 5-level system
-        if is_likely_scam:
-            risk_level = "scam"
-        elif len(clauses_violates) >= 3:
-            risk_level = "high"
-        elif len(clauses_violates) >= 1:
-            if len(clauses_attention) >= 2:
-                risk_level = "high"
-            else:
-                risk_level = "medium-high"
-        elif len(clauses_attention) >= 3:
-            risk_level = "medium"
-        elif len(clauses_attention) >= 1:
-            risk_level = "medium-low"
-        else:
-            risk_level = "low"
+        # AI-POWERED DYNAMIC RISK LEVEL DETERMINATION
+        # Based on confidence scores: 0-20% = Safe/Low, 21-50% = Medium, 51-80% = High, 81-100% = Scam
         
-        logging.info(f"Risk assessment: {risk_level} (Violations: {len(clauses_violates)}, Attention: {len(clauses_attention)}, Scam: {is_likely_scam})")
+        if scam_confidence >= 70:
+            # 100% sure it's a scam
+            risk_level = "scam"
+            risk_confidence = scam_confidence
+        elif scam_confidence >= 40:
+            # Suspicious but not completely sure
+            risk_level = "high"
+            risk_confidence = scam_confidence
+        elif legal_risk_confidence >= 80:
+            # Almost 100% sure of legal violations
+            risk_level = "high"
+            risk_confidence = legal_risk_confidence
+        elif legal_risk_confidence >= 50 or len(clauses_violates) >= 2:
+            # Half sure / multiple violations
+            risk_level = "medium"
+            risk_confidence = legal_risk_confidence
+        elif legal_risk_confidence >= 20 or len(clauses_attention) >= 1 or len(clauses_violates) >= 1:
+            # Not very sure / minor concerns
+            risk_level = "low"
+            risk_confidence = max(legal_risk_confidence, 20)
+        elif legal_risk_confidence <= 10 and scam_confidence <= 10:
+            # 100% sure it's safe
+            risk_level = "safe"
+            risk_confidence = 100 - max(legal_risk_confidence, scam_confidence)
+        else:
+            # Default low risk
+            risk_level = "low"
+            risk_confidence = 100 - legal_risk_confidence
+        
+        logging.info(f"FINAL RISK LEVEL: {risk_level.upper()} ({risk_confidence}% confidence) - Scam: {scam_confidence}%, Legal: {legal_risk_confidence}%, Violations: {len(clauses_violates)}, Attention: {len(clauses_attention)}")
         
         # Generate comprehensive AI analysis using chunks
         law_context = "\n".join([f"- {law['title']}: {law['description']}" for law in LAW_DATABASE])
