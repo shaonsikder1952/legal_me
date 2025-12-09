@@ -18,6 +18,7 @@ const Chat = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState(() => `session_${Date.now()}`);
+  const [typingMessageIndex, setTypingMessageIndex] = useState(null);
   const messagesEndRef = useRef(null);
 
   const loadSessionMessages = async (sid) => {
