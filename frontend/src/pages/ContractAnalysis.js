@@ -607,7 +607,19 @@ const ContractAnalysis = () => {
           {/* Recommendations */}
           <section className="mb-10">
             <h2 className="font-serif text-3xl text-stone-900 mb-4">6. Recommendations</h2>
-            <p className="text-stone-700 leading-relaxed">{analysis.recommendations}</p>
+            <div className="prose prose-stone max-w-none">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
+                components={{
+                  a: ({node, ...props}) => (
+                    <a {...props} target="_blank" rel="noopener noreferrer" className="text-orange-700 hover:underline font-medium" />
+                  )
+                }}
+              >
+                {analysis.recommendations}
+              </ReactMarkdown>
+            </div>
           </section>
 
           {/* Key Excerpts */}
