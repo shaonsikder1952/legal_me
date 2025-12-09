@@ -304,6 +304,8 @@ class ContractAnalysis(BaseModel):
     document_type: str
     risk_level: str
     page_count: int
+    is_likely_scam: bool
+    scam_indicators: List[dict]
     clauses_safe: List[dict]
     clauses_attention: List[dict]
     clauses_violates: List[dict]
