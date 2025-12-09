@@ -566,20 +566,14 @@ def extract_text_from_file(content: bytes, filename: str) -> tuple:
 @api_router.post("/contract/analyze")
 async def analyze_contract(file: UploadFile = File(...)):
     try:
-        # Extract text from PDF
+        # Extract text from any supported file type
         content = await file.read()
-        pdf_reader = PdfReader(io.BytesIO(content))
-        
-        extracted_text = ""
-        page_count = len(pdf_reader.pages)
-        
-        for page in pdf_reader.pages:
-            extracted_text += page.extract_text() + "\n"
+        extracted_text, page_count = extract_text_from_file(content, file.filename)
         
         if not extracted_text.strip():
-            raise HTTPException(status_code=400, detail="Could not extract text from PDF")
+            raise HTTPException(status_code=400, detail="Could not extract text from file. The file may be empty or corrupted.")
         
-        logging.info(f"Extracted {len(extracted_text)} characters from {page_count} pages")
+        logging.info(f"Extracted {len(extracted_text)} characters from {page_count} pages/sections")
         
         # Split into chunks for analysis if document is large
         text_chunks = chunk_text(extracted_text, chunk_size=3000)
