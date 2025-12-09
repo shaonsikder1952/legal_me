@@ -16,8 +16,22 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [sessionId] = useState(() => `session_${Date.now()}`);
+  const [sessionId, setSessionId] = useState(() => `session_${Date.now()}`);
   const messagesEndRef = useRef(null);
+
+  const loadSessionMessages = async (sid) => {
+    try {
+      const response = await axios.get(`${API}/chat/${sid}/messages`);
+      const loadedMessages = response.data.map(msg => ([
+        { role: 'user', content: msg.user_message },
+        { role: 'assistant', content: msg.ai_response }
+      ])).flat();
+      setMessages(loadedMessages);
+      setSessionId(sid);
+    } catch (error) {
+      console.error('Error loading session:', error);
+    }
+  };
 
   useEffect(() => {
     if (location.state?.initialTopic) {
