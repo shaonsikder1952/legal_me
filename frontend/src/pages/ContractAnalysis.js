@@ -350,7 +350,7 @@ const ContractAnalysis = () => {
                         {msg.isTyping && typingMessageIndex === idx ? (
                           <TypingAnimation
                             content={msg.content}
-                            speed={15}
+                            speed={5}
                             onComplete={() => {
                               setTypingMessageIndex(null);
                               setChatMessages(prev => prev.map((m, i) => 
