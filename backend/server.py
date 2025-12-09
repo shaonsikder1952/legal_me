@@ -74,6 +74,60 @@ LAW_DATABASE = [
     }
 ]
 
+# Scam Detection Patterns
+SCAM_PATTERNS = [
+    {
+        "pattern": r"(pay|zahlen|send|überweisen|transfer).{0,100}(advance|voraus|upfront|sofort|immediately|western union|gift card|bitcoin|crypto)",
+        "indicator": "Advance payment request",
+        "severity": "high"
+    },
+    {
+        "pattern": r"(lottery|gewinn|prize|preis|inheritance|erbe|million|jackpot).{0,100}(won|gewonnen|claim|anspruch)",
+        "indicator": "Lottery/prize scam",
+        "severity": "high"
+    },
+    {
+        "pattern": r"(urgent|dringend|immediately|sofort|act now|limited time|befristet).{0,100}(action|handeln|respond|antworten|expire|ablaufen)",
+        "indicator": "Urgency pressure tactic",
+        "severity": "medium"
+    },
+    {
+        "pattern": r"(bank account|bankkonto|credit card|kreditkarte|password|passwort|pin|social security|personal information|ssn)",
+        "indicator": "Requests sensitive personal information",
+        "severity": "high"
+    },
+    {
+        "pattern": r"(nigerian prince|prince|princess|diplomat|government official|minister).{0,100}(money|geld|transfer|fund)",
+        "indicator": "Nigerian prince/419 scam pattern",
+        "severity": "high"
+    },
+    {
+        "pattern": r"(work from home|heimarbeit|make money fast|schnell geld|guaranteed income|garantiertes einkommen).{0,100}(no experience|keine erfahrung|easy|einfach)",
+        "indicator": "Work-from-home scam",
+        "severity": "medium"
+    },
+    {
+        "pattern": r"(IRS|tax authority|finanzamt|legal action|rechtliche schritte|arrest|warrant|haftbefehl).{0,100}(unless|außer|payment|zahlung|immediately|sofort)",
+        "indicator": "Government impersonation scam",
+        "severity": "high"
+    },
+    {
+        "pattern": r"(click here|klicken sie hier|verify account|konto verifizieren|suspended|gesperrt|update information)",
+        "indicator": "Phishing attempt",
+        "severity": "high"
+    },
+    {
+        "pattern": r"(refund|rückerstattung|overpayment|überzahlung).{0,100}(send back|zurücksenden|return|zurückgeben|difference|differenz)",
+        "indicator": "Overpayment scam",
+        "severity": "high"
+    },
+    {
+        "pattern": r"(romance|dating|love|liebe).{0,100}(money|geld|help|hilfe|emergency|notfall|hospital|krankenhaus)",
+        "indicator": "Romance scam",
+        "severity": "high"
+    }
+]
+
 # Clause Database with patterns
 CLAUSE_DATABASE = [
     {
