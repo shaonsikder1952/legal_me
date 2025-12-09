@@ -327,7 +327,7 @@ const ContractAnalysis = () => {
         {showChat && (
           <div className="fixed bottom-24 right-6 left-6 md:left-auto md:w-96 h-[500px] bg-white rounded-2xl shadow-2xl border border-stone-200 flex flex-col z-50">
             <div className="p-4 border-b border-stone-100 flex items-center justify-between">
-              <h3 className="font-serif text-lg text-stone-900">Ask about this contract</h3>
+              <h3 className="font-serif text-lg text-stone-900">Ask about this document</h3>
               <button onClick={() => setShowChat(false)} className="text-stone-500 hover:text-stone-900">
                 ×
               </button>
