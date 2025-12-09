@@ -701,24 +701,85 @@ async def analyze_contract(file: UploadFile = File(...)):
         
         logging.info(f"Extracted {len(extracted_text)} characters from {page_count} pages/sections")
         
-        # SCAM DETECTION - Check for scam patterns first
+        # AI-POWERED RISK ASSESSMENT - Let AI determine risk level dynamically
+        logging.info("Starting AI-powered risk assessment...")
+        
+        risk_assessment_prompt = f"""You are a legal expert analyzing a document for potential risks and scams.
+
+DOCUMENT TEXT (First 5000 characters):
+{extracted_text[:5000]}
+
+ANALYZE THIS DOCUMENT AND PROVIDE:
+
+1. SCAM ASSESSMENT (0-100% confidence):
+   - Is this a scam, phishing attempt, or fraudulent scheme?
+   - Look for: advance payment requests, lottery scams, urgency tactics, requests for sensitive info, too-good-to-be-true offers
+   - Confidence: 0% (definitely not scam) to 100% (definitely scam)
+
+2. LEGAL RISK ASSESSMENT (0-100% confidence):
+   - Are there illegal clauses, unfair terms, or violations of German law?
+   - Look for: excessive fees, unfair termination, liability exclusions, illegal requirements
+   - Confidence: 0% (completely safe) to 100% (severe violations)
+
+3. KEY CONCERNS:
+   - List specific problematic clauses or red flags (max 5)
+
+Provide response in this EXACT format:
+SCAM_CONFIDENCE: [0-100]
+SCAM_INDICATORS: [List specific scam indicators found, or "None" if not a scam]
+LEGAL_RISK_CONFIDENCE: [0-100]
+LEGAL_CONCERNS: [List specific legal issues found, or "None" if safe]
+RISK_EXPLANATION: [2-3 sentence summary of why this risk level]"""
+
+        risk_chat = LlmChat(
+            api_key=os.environ['EMERGENT_LLM_KEY'],
+            session_id=f"risk_{uuid.uuid4()}",
+            system_message="You are a legal risk assessment AI. Be thorough and accurate in detecting scams and legal violations."
+        )
+        risk_chat.with_model("gemini", "gemini-2.0-flash")
+        
+        ai_risk_response = await risk_chat.send_message(UserMessage(text=risk_assessment_prompt))
+        logging.info(f"AI Risk Assessment: {ai_risk_response[:200]}...")
+        
+        # Parse AI risk assessment
+        scam_confidence = 0
+        legal_risk_confidence = 0
         scam_indicators = []
-        text_lower = extracted_text.lower()
+        legal_concerns = []
+        risk_explanation = "Document analyzed"
         
-        for scam_pattern in SCAM_PATTERNS:
-            matches = re.finditer(scam_pattern["pattern"], text_lower, re.IGNORECASE)
-            for match in matches:
-                snippet = extracted_text[max(0, match.start()-100):min(len(extracted_text), match.end()+100)]
-                scam_indicators.append({
-                    "indicator": scam_pattern["indicator"],
-                    "severity": scam_pattern["severity"],
-                    "snippet": snippet.strip()
-                })
+        if "SCAM_CONFIDENCE:" in ai_risk_response:
+            try:
+                scam_conf_text = ai_risk_response.split("SCAM_CONFIDENCE:")[1].split("\n")[0].strip()
+                scam_confidence = int(''.join(filter(str.isdigit, scam_conf_text)))
+            except:
+                pass
         
-        is_likely_scam = len([s for s in scam_indicators if s["severity"] == "high"]) >= 2 or len(scam_indicators) >= 4
+        if "LEGAL_RISK_CONFIDENCE:" in ai_risk_response:
+            try:
+                legal_conf_text = ai_risk_response.split("LEGAL_RISK_CONFIDENCE:")[1].split("\n")[0].strip()
+                legal_risk_confidence = int(''.join(filter(str.isdigit, legal_conf_text)))
+            except:
+                pass
         
-        if is_likely_scam:
-            logging.warning(f"SCAM DETECTED: {len(scam_indicators)} indicators found")
+        if "SCAM_INDICATORS:" in ai_risk_response:
+            indicators_text = ai_risk_response.split("SCAM_INDICATORS:")[1].split("LEGAL_RISK_CONFIDENCE:")[0].strip()
+            if "None" not in indicators_text and indicators_text:
+                scam_indicators = [{"indicator": ind.strip("- ").strip(), "severity": "high", "snippet": ""} 
+                                 for ind in indicators_text.split("\n") if ind.strip() and ind.strip() != "None"]
+        
+        if "LEGAL_CONCERNS:" in ai_risk_response:
+            concerns_text = ai_risk_response.split("LEGAL_CONCERNS:")[1].split("RISK_EXPLANATION:")[0].strip()
+            if "None" not in concerns_text and concerns_text:
+                legal_concerns = [c.strip("- ").strip() for c in concerns_text.split("\n") if c.strip() and c.strip() != "None"]
+        
+        if "RISK_EXPLANATION:" in ai_risk_response:
+            risk_explanation = ai_risk_response.split("RISK_EXPLANATION:")[1].strip()
+        
+        # Determine if it's a scam based on AI confidence
+        is_likely_scam = scam_confidence >= 70
+        
+        logging.info(f"AI Assessment - Scam: {scam_confidence}%, Legal Risk: {legal_risk_confidence}%, Is Scam: {is_likely_scam}")
         
         # Split into chunks for analysis if document is large
         text_chunks = chunk_text(extracted_text, chunk_size=3000)
