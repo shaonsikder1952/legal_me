@@ -268,6 +268,20 @@ async def get_topics():
 @api_router.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
     try:
+        # Load conversation history for this session
+        conversation_history = await db.chat_messages.find(
+            {"session_id": request.session_id},
+            {"_id": 0}
+        ).sort("timestamp", 1).to_list(100)
+        
+        # Build conversation context
+        conversation_context = ""
+        if conversation_history:
+            conversation_context = "\n\nCONVERSATION HISTORY (for context):\n"
+            for msg in conversation_history[-10:]:  # Last 10 messages for context
+                conversation_context += f"User: {msg['user_message']}\n"
+                conversation_context += f"Assistant: {msg['ai_response'][:200]}...\n\n"
+        
         # Create system message with law database context and trusted links
         law_context = "\n".join([f"- {law['title']}: {law['description']} (Link: {law['url']})" for law in LAW_DATABASE])
         
