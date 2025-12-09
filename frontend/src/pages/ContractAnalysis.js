@@ -90,6 +90,12 @@ const ContractAnalysis = () => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [analysis, setAnalysis] = useState(null);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+  const [showChat, setShowChat] = useState(false);
+  const [chatSessionId] = useState(() => `contract_chat_${Date.now()}`);
+  const chatEndRef = useRef(null);
 
   const getNextStepText = (docType, stepType) => {
     const config = NEXT_STEPS_CONFIG[docType] || NEXT_STEPS_CONFIG.general;
