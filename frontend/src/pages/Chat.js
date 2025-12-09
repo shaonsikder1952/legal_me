@@ -114,12 +114,12 @@ const Chat = () => {
                 >
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
+                    rehypePlugins={[rehypeRaw]}
                     components={{
                       a: ({node, ...props}) => (
                         <a {...props} target="_blank" rel="noopener noreferrer" className="text-orange-700 hover:underline font-medium" />
                       )
                     }}
-                    skipHtml={false}
                   >
                     {message.content}
                   </ReactMarkdown>
