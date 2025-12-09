@@ -109,7 +109,11 @@ const Chat = () => {
             <div className="h-6 w-px bg-stone-200"></div>
             <div>
               <h1 className="font-serif text-xl md:text-2xl text-stone-900">LegalMe Chat</h1>
-              <p className="text-xs md:text-sm text-stone-500">Ask any legal question</p>
+              <p className="text-xs md:text-sm text-stone-500">
+                {messages.length > 0 
+                  ? `${Math.floor(messages.length / 2)} messages • AI remembers context` 
+                  : 'Ask any legal question'}
+              </p>
             </div>
           </div>
         </div>
