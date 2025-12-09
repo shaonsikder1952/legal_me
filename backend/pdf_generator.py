@@ -167,9 +167,15 @@ def generate_contract_pdf(analysis_data):
     return buffer
 
 def get_risk_emoji(risk_level):
-    if risk_level == 'high':
+    if risk_level == 'scam':
+        return '🚨'
+    elif risk_level == 'high':
         return '🔴'
+    elif risk_level == 'medium-high':
+        return '🟠'
     elif risk_level == 'medium':
         return '🟡'
+    elif risk_level == 'medium-low':
+        return '🔵'
     else:
         return '🟢'
