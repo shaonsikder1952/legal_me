@@ -387,9 +387,19 @@ const ContractAnalysis = () => {
         {/* Report */}
         <div className="bg-white rounded-3xl shadow-lg border border-stone-100 p-8 md:p-12" data-testid="analysis-report">
           {/* Title */}
-          <div className="mb-8">
-            <h1 className="font-serif text-4xl md:text-5xl text-stone-900 mb-4">LegalMe Contract Review Report</h1>
-            <div className="h-1 w-24 bg-orange-600 rounded mb-6"></div>
+          <div className="mb-8 flex items-start justify-between">
+            <div>
+              <h1 className="font-serif text-4xl md:text-5xl text-stone-900 mb-4">LegalMe Contract Review Report</h1>
+              <div className="h-1 w-24 bg-orange-600 rounded mb-6"></div>
+            </div>
+            <button
+              onClick={handleDownloadPDF}
+              className="flex items-center gap-2 bg-orange-700 text-white hover:bg-orange-800 h-12 px-6 rounded-full font-medium shadow-lg"
+              data-testid="download-pdf-button"
+            >
+              <Download className="w-5 h-5" />
+              Download PDF
+            </button>
           </div>
 
           {/* Overview */}
