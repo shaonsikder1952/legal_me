@@ -519,31 +519,41 @@ async def analyze_contract(file: UploadFile = File(...)):
         
         logging.info(f"Extracted {len(extracted_text)} characters from {page_count} pages")
         
-        # Analyze clauses
+        # Split into chunks for analysis if document is large
+        text_chunks = chunk_text(extracted_text, chunk_size=3000)
+        logging.info(f"Split document into {len(text_chunks)} chunks")
+        
+        # Analyze clauses across all chunks
         clauses_safe = []
         clauses_attention = []
         clauses_violates = []
         
-        text_lower = extracted_text.lower()
-        for clause_pattern in CLAUSE_DATABASE:
-            matches = re.finditer(clause_pattern["pattern"], text_lower, re.IGNORECASE)
-            for match in matches:
-                snippet = extracted_text[max(0, match.start()-50):min(len(extracted_text), match.end()+50)]
-                law_ref = next((law for law in LAW_DATABASE if law["id"] == clause_pattern.get("law_ref")), None)
-                
-                clause_info = {
-                    "clause": snippet.strip(),
-                    "explanation": clause_pattern["explanation"],
-                    "law": law_ref["title"] if law_ref else "General Legal Principle",
-                    "law_link": law_ref["url"] if law_ref else "#"
-                }
-                
-                if clause_pattern["risk"] == "safe":
-                    clauses_safe.append(clause_info)
-                elif clause_pattern["risk"] == "attention":
-                    clauses_attention.append(clause_info)
-                elif clause_pattern["risk"] == "violates":
-                    clauses_violates.append(clause_info)
+        for chunk_idx, chunk in enumerate(text_chunks):
+            text_lower = chunk.lower()
+            for clause_pattern in CLAUSE_DATABASE:
+                matches = re.finditer(clause_pattern["pattern"], text_lower, re.IGNORECASE)
+                for match in matches:
+                    snippet = chunk[max(0, match.start()-50):min(len(chunk), match.end()+50)]
+                    law_ref = next((law for law in LAW_DATABASE if law["id"] == clause_pattern.get("law_ref")), None)
+                    
+                    # Check for duplicates
+                    clause_text = snippet.strip()
+                    if any(clause_text in c["clause"] for c in clauses_safe + clauses_attention + clauses_violates):
+                        continue
+                    
+                    clause_info = {
+                        "clause": clause_text,
+                        "explanation": clause_pattern["explanation"],
+                        "law": law_ref["title"] if law_ref else "General Legal Principle",
+                        "law_link": law_ref["url"] if law_ref else "#"
+                    }
+                    
+                    if clause_pattern["risk"] == "safe":
+                        clauses_safe.append(clause_info)
+                    elif clause_pattern["risk"] == "attention":
+                        clauses_attention.append(clause_info)
+                    elif clause_pattern["risk"] == "violates":
+                        clauses_violates.append(clause_info)
         
         # Determine overall risk
         if clauses_violates:
