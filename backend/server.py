@@ -15,6 +15,10 @@ from PyPDF2 import PdfReader
 import io
 import re
 from pdf_generator import generate_contract_pdf
+from docx import Document
+import pytesseract
+from PIL import Image
+from pdf2image import convert_from_bytes
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
