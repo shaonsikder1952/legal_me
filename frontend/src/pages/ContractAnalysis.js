@@ -162,7 +162,9 @@ const ContractAnalysis = () => {
         message: userMessage
       });
 
-      setChatMessages(prev => [...prev, { role: 'assistant', content: response.data.response }]);
+      const newMessage = { role: 'assistant', content: response.data.response, isTyping: true };
+      setChatMessages(prev => [...prev, newMessage]);
+      setTypingMessageIndex(chatMessages.length + 1);
     } catch (error) {
       console.error('Chat error:', error);
       setChatMessages(prev => [
