@@ -506,6 +506,27 @@ async def get_contract_analysis(contract_id: str):
         raise HTTPException(status_code=404, detail="Contract analysis not found")
     return analysis
 
+@api_router.get("/contract/{contract_id}/download")
+async def download_contract_pdf(contract_id: str):
+    analysis = await db.contract_analyses.find_one({"id": contract_id}, {"_id": 0})
+    if not analysis:
+        raise HTTPException(status_code=404, detail="Contract analysis not found")
+    
+    try:
+        pdf_buffer = generate_contract_pdf(analysis)
+        
+        from fastapi.responses import StreamingResponse
+        return StreamingResponse(
+            pdf_buffer,
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f"attachment; filename=LegalMe_Report_{contract_id[:8]}.pdf"
+            }
+        )
+    except Exception as e:
+        logging.error(f"PDF generation error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"PDF generation failed: {str(e)}")
+
 @api_router.get("/alternatives/{category}")
 async def get_alternatives(category: str):
     alt = next((a for a in ALTERNATIVE_DATABASE if a["category"] == category), None)
