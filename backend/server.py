@@ -19,6 +19,10 @@ from docx import Document
 import pytesseract
 from PIL import Image
 from pdf2image import convert_from_bytes
+from pptx import Presentation
+from openpyxl import load_workbook
+from odf import text as odf_text, teletype
+from odf.opendocument import load as odf_load
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
