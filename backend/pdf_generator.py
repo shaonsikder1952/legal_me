@@ -115,13 +115,17 @@ def generate_contract_pdf(analysis_data):
     story.append(Paragraph(analysis_data.get('recommendations', 'Please consult with a legal professional.'), body_style))
     story.append(Spacer(1, 0.3*inch))
     
-    # 7. Full Text (optional, first 2000 chars)
+    # 7. Key Excerpts from Document
     story.append(PageBreak())
-    story.append(Paragraph('7. Full Extracted Text', heading_style))
-    extracted_text = analysis_data.get('extracted_text', '')
-    if len(extracted_text) > 3000:
-        extracted_text = extracted_text[:3000] + '...\n\n[Text truncated for PDF report]'
-    story.append(Paragraph(extracted_text.replace('\n', '<br/>'), body_style))
+    story.append(Paragraph('7. Key Excerpts from Document', heading_style))
+    key_excerpts = analysis_data.get('key_excerpts', [])
+    if key_excerpts:
+        for i, excerpt in enumerate(key_excerpts, 1):
+            story.append(Paragraph(f'<b>Excerpt {i}:</b>', body_style))
+            story.append(Paragraph(excerpt.replace('\n', '<br/>'), body_style))
+            story.append(Spacer(1, 0.1*inch))
+    else:
+        story.append(Paragraph('No key excerpts extracted.', body_style))
     
     # Build PDF
     doc.build(story)
