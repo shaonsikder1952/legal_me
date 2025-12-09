@@ -121,6 +121,10 @@ const ContractAnalysis = () => {
     }
   };
 
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages]);
+
   const handleUpload = async () => {
     if (!file) return;
 
@@ -138,6 +142,52 @@ const ContractAnalysis = () => {
       alert('Error analyzing contract. Please try again.');
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleChatSubmit = async (e) => {
+    e.preventDefault();
+    if (!chatInput.trim() || !analysis) return;
+
+    const userMessage = chatInput;
+    setChatMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    setChatInput('');
+    setChatLoading(true);
+
+    try {
+      const response = await axios.post(`${API}/contract/${analysis.id}/chat`, {
+        session_id: chatSessionId,
+        message: userMessage
+      });
+
+      setChatMessages(prev => [...prev, { role: 'assistant', content: response.data.response }]);
+    } catch (error) {
+      console.error('Chat error:', error);
+      setChatMessages(prev => [
+        ...prev,
+        { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }
+      ]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    try {
+      const response = await axios.get(`${API}/contract/${analysis.id}/download`, {
+        responseType: 'blob'
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `LegalMe_Report_${analysis.id.substring(0, 8)}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Download error:', error);
+      alert('Error downloading PDF. Please try again.');
     }
   };
 
