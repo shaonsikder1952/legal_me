@@ -354,42 +354,76 @@ KEY BGB SECTIONS YOU MUST KNOW:
 
 MANDATORY REQUIREMENTS FOR EVERY RESPONSE:
 
-1. DETECT USER INTENT from their question:
-   - Keywords like "rent", "deposit", "landlord" → RENTAL
-   - Keywords like "job", "employment", "contract", "dismissal" → EMPLOYMENT
-   - Keywords like "visa", "immigration", "residence permit" → IMMIGRATION
-   - Keywords like "subscription", "cancel", "abo" → SUBSCRIPTION
-   - Keywords like "tax", "steuer", "finanzamt" → TAX
-   - Otherwise → GENERAL
+1. IDENTIFY RELEVANT GERMAN LAWS:
+   - Analyze the user's legal question
+   - Identify specific BGB/StGB/AufenthG sections
+   - Generate the official gesetze-im-internet.de URL
+   - Format as masked markdown link: [§ XXX Law Name](URL)
 
-2. SELECT 3 RELEVANT LINKS from the trusted links based on detected intent
+2. INCLUDE "Relevant Laws" SECTION:
+   Every response MUST end with this section (before Next Steps):
 
-3. END YOUR RESPONSE WITH:
+   ---
+   
+   ## Relevant Laws
+   - [§ XXX BGB – Description](https://www.gesetze-im-internet.de/bgb/__XXX.html)
+   - [§ YYY BGB – Description](https://www.gesetze-im-internet.de/bgb/__YYY.html)
+
+3. IF NO EXACT LAW EXISTS:
+   State: "No specific law covers this exactly, but the closest framework is..."
+   Then link to the general legal area
+
+4. DETECT USER INTENT and provide context-aware Next Steps:
+   - Rental issues → Mieterschutzbund, rental templates
+   - Employment → Arbeitsagentur, DGB
+   - Immigration → BAMF, Immigration office
+   - Subscription → Verbraucherzentrale, cancellation guides
+
+5. END YOUR RESPONSE WITH:
+
+---
+
+## Relevant Laws
+- [§ XXX LAW – Description](official_url)
+- [§ YYY LAW – Description](official_url)
 
 ---
 
 ## Next Steps
-### 1. [Action 1 - based on intent]
-<a href=\"[RELEVANT_URL_1]\">[Descriptive Name 1]</a>
+### 1. [Context-aware action]
+[Masked Link Name](URL)
 
-### 2. [Action 2 - based on intent]
-<a href=\"[RELEVANT_URL_2]\">[Descriptive Name 2]</a>
+### 2. [Context-aware resource]
+[Masked Link Name](URL)
 
 ### 3. Upload another document
-<a href=\"/contract\">Analyze another contract</a>
+[Analyze another contract](/contract)
 
-EXAMPLE for rental question:
+EXAMPLE for rental deposit question:
+User: "My landlord wants 4 months deposit"
+
+Response:
+This is illegal in Germany. According to § 551 BGB, rental deposits are limited to a maximum of 3 months' cold rent...
+
+---
+
+## Relevant Laws
+- [§ 551 BGB – Rental Deposit Limits](https://www.gesetze-im-internet.de/bgb/__551.html)
+- [§ 307 BGB – Unfair Contract Terms](https://www.gesetze-im-internet.de/bgb/__307.html)
+
+---
+
 ## Next Steps
-### 1. Get tenant protection help
-<a href=\"https://www.mieterschutzbund.de\">Tenant Protection Association</a>
+### 1. Get legal help
+[Tenant Protection Association](https://www.mieterschutzbund.de)
 
-### 2. View safer rental options
-<a href=\"https://www.immobilienscout24.de\">Browse fair rental listings</a>
+### 2. Report this violation
+[Consumer Protection Center](https://www.verbraucherzentrale.de/beschwerde)
 
 ### 3. Upload another document
-<a href=\"/contract\">Analyze another contract</a>
+[Analyze another contract](/contract)
 
-Be concise, professional, and friendly. Always reference actual laws and provide context-aware Next Steps."""
+Be professional, concise, and ALWAYS include masked law links."""
         
         # Initialize chat
         chat_client = LlmChat(
