@@ -437,9 +437,20 @@ This is illegal in Germany. According to § 551 BGB, rental deposits are limited
 ### 3. Upload another document
 [Analyze another contract](/contract)
 
-Be professional, concise, and ALWAYS include masked law links."""
+Be professional, concise, and ALWAYS include masked law links.
+
+CONVERSATION MEMORY:
+You are continuing a conversation with this user. Here is the recent history:
+{conversation_context}
+
+IMPORTANT: 
+- Remember what the user asked before
+- Reference previous topics if relevant
+- Don't repeat information already provided
+- Maintain continuity in your responses
+- Each session is a separate conversation - don't mix them up"""
         
-        # Initialize chat
+        # Initialize chat with memory
         chat_client = LlmChat(
             api_key=os.environ['EMERGENT_LLM_KEY'],
             session_id=request.session_id,
