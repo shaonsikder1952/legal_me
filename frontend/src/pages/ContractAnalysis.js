@@ -291,14 +291,14 @@ const ContractAnalysis = () => {
                 <span className="font-bold text-orange-700">1.</span>
                 <div>
                   <p className="text-stone-900">
-                    Report this issue:{' '}
+                    {getNextStepText(analysis.document_type, 'authority')}:{' '}
                     <a
-                      href="https://www.verbraucherzentrale.de/beschwerde"
+                      href={getNextStepLink(analysis.document_type, 'authority')}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-orange-700 hover:underline font-medium"
                     >
-                      Open reporting page →
+                      {getNextStepLinkText(analysis.document_type, 'authority')} →
                     </a>
                   </p>
                 </div>
@@ -307,14 +307,14 @@ const ContractAnalysis = () => {
                 <span className="font-bold text-orange-700">2.</span>
                 <div>
                   <p className="text-stone-900">
-                    See safer alternatives:{' '}
+                    {getNextStepText(analysis.document_type, 'alternative')}:{' '}
                     <a
-                      href="https://www.verbraucherzentrale.de"
+                      href={getNextStepLink(analysis.document_type, 'alternative')}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-orange-700 hover:underline font-medium"
                     >
-                      View safer options →
+                      {getNextStepLinkText(analysis.document_type, 'alternative')} →
                     </a>
                   </p>
                 </div>
