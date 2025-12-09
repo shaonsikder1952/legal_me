@@ -48,7 +48,7 @@ def generate_contract_pdf(analysis_data):
     )
     
     # Title
-    story.append(Paragraph('🧾 LegalMe Contract Review Report', title_style))
+    story.append(Paragraph('🧾 LegalMe Legal Document Analysis Report', title_style))
     story.append(Spacer(1, 0.3*inch))
     
     # 1. Document Overview
