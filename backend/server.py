@@ -776,9 +776,18 @@ RESPONSE FORMAT:
 ### 1. [Relevant action]
 [Masked Link](url)
 
-User question: {request.message}"""
+CONVERSATION MEMORY FOR THIS CONTRACT:
+{chat_context}
+
+IMPORTANT:
+- Remember what the user already asked about THIS contract
+- Don't repeat information from previous answers
+- Reference previous Q&A if relevant
+- Keep the conversation flowing naturally
+
+User's current question: {request.message}"""
         
-        # Initialize chat
+        # Initialize chat with memory
         chat_client = LlmChat(
             api_key=os.environ['EMERGENT_LLM_KEY'],
             session_id=f"contract_{contract_id}_{request.session_id}",
