@@ -146,7 +146,7 @@ const Chat = () => {
                   {message.isTyping && typingMessageIndex === index ? (
                     <TypingAnimation
                       content={message.content}
-                      speed={15}
+                      speed={5}
                       onComplete={() => {
                         setTypingMessageIndex(null);
                         setMessages(prev => prev.map((msg, idx) => 
