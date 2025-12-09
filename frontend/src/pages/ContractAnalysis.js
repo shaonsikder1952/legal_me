@@ -556,14 +556,18 @@ const ContractAnalysis = () => {
                   <div key={idx} className="p-6 bg-yellow-50 border border-yellow-200 rounded-2xl">
                     <p className="font-medium text-stone-900 mb-2">{clause.explanation}</p>
                     <p className="text-sm text-stone-600 mb-3 italic">&quot;...{clause.clause}...&quot;</p>
-                    <a
-                      href={clause.law_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-orange-700 hover:underline font-medium"
-                    >
-                      Reference: {clause.law} →
-                    </a>
+                    {clause.law_link && clause.law_link !== '#' ? (
+                      <a
+                        href={clause.law_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-sm text-orange-700 hover:underline font-medium bg-orange-50 px-3 py-1 rounded-full"
+                      >
+                        📜 {clause.law}
+                      </a>
+                    ) : (
+                      <span className="text-sm text-stone-500">{clause.law}</span>
+                    )}
                   </div>
                 ))}
               </div>
