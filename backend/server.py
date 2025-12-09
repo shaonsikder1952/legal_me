@@ -885,7 +885,7 @@ Provide brief analysis (2-3 sentences)."""
             chunk_analysis = await chat_client.send_message(UserMessage(text=chunk_prompt))
             chunk_analyses.append(f"Section {i+1}: {chunk_analysis}")
         
-        # Merge all chunk analyses into final summary
+        # Merge all chunk analyses into final summary WITH MASKED LAW LINKS
         merged_prompt = f"""You analyzed a legal document in {len(chunk_analyses)} sections. Here are the findings:
 
 {chr(10).join(chunk_analyses)}
@@ -895,14 +895,32 @@ Detected clauses:
 - Attention needed: {len(clauses_attention)}
 - Violations: {len(clauses_violates)}
 
-Available German laws:
+CRITICAL: You MUST include masked law links in your response.
+
+OFFICIAL GERMAN LAW SOURCES:
+- BGB sections: https://www.gesetze-im-internet.de/bgb/__[section].html
+- Format: [§ XXX BGB – Description](https://www.gesetze-im-internet.de/bgb/__XXX.html)
+
+KEY BGB SECTIONS:
+- § 535: Rental obligations
+- § 551: Rental deposit (max 3 months)
+- § 558: Rent increases
+- § 573: Landlord termination
+- § 611a: Employment basics
+- § 622: Employment notice periods
+- § 626: Extraordinary termination
+- § 312g: Right of withdrawal
+- § 307: Unfair contract terms
+
+Available laws:
 {law_context}
 
 Now provide a comprehensive final analysis in this EXACT format:
 TYPE: [rental/employment/subscription/immigration/tax/other]
-SUMMARY: [3-5 sentence comprehensive summary covering key points, risks, and overall assessment]
-RECOMMENDATIONS: [Specific actionable recommendations based on the entire document]
-KEY_EXCERPTS: [3-5 most important text excerpts from the document, each 50-100 words]"""
+SUMMARY: [3-5 sentence comprehensive summary with MASKED LAW LINKS. Example: "The deposit exceeds [§ 551 BGB – Rental Deposit](https://www.gesetze-im-internet.de/bgb/__551.html) limits."]
+RECOMMENDATIONS: [Specific actionable recommendations with MASKED LAW LINKS where relevant]
+KEY_EXCERPTS: [3-5 most important text excerpts from the document, each 50-100 words]
+RELEVANT_LAWS: [List 2-3 specific German laws being violated or relevant, in MASKED LINK format: [§ XXX BGB – Description](URL)]"""
         
         chat_client = LlmChat(
             api_key=os.environ['EMERGENT_LLM_KEY'],
