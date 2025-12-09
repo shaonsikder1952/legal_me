@@ -699,6 +699,25 @@ async def analyze_contract(file: UploadFile = File(...)):
         
         logging.info(f"Extracted {len(extracted_text)} characters from {page_count} pages/sections")
         
+        # SCAM DETECTION - Check for scam patterns first
+        scam_indicators = []
+        text_lower = extracted_text.lower()
+        
+        for scam_pattern in SCAM_PATTERNS:
+            matches = re.finditer(scam_pattern["pattern"], text_lower, re.IGNORECASE)
+            for match in matches:
+                snippet = extracted_text[max(0, match.start()-100):min(len(extracted_text), match.end()+100)]
+                scam_indicators.append({
+                    "indicator": scam_pattern["indicator"],
+                    "severity": scam_pattern["severity"],
+                    "snippet": snippet.strip()
+                })
+        
+        is_likely_scam = len([s for s in scam_indicators if s["severity"] == "high"]) >= 2 or len(scam_indicators) >= 4
+        
+        if is_likely_scam:
+            logging.warning(f"SCAM DETECTED: {len(scam_indicators)} indicators found")
+        
         # Split into chunks for analysis if document is large
         text_chunks = chunk_text(extracted_text, chunk_size=3000)
         logging.info(f"Split document into {len(text_chunks)} chunks")
