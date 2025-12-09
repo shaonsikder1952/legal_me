@@ -851,6 +851,8 @@ KEY_EXCERPTS: [3-5 most important text excerpts from the document, each 50-100 w
             document_type=doc_type,
             risk_level=risk_level,
             page_count=page_count,
+            is_likely_scam=is_likely_scam,
+            scam_indicators=scam_indicators,
             clauses_safe=clauses_safe,
             clauses_attention=clauses_attention,
             clauses_violates=clauses_violates,
