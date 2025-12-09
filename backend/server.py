@@ -507,6 +507,62 @@ def chunk_text(text: str, chunk_size: int = 3000) -> list:
     
     return chunks
 
+def extract_text_from_file(content: bytes, filename: str) -> tuple:
+    """
+    Extract text from various file types (PDF, DOCX, TXT, Images)
+    Returns: (extracted_text, page_count)
+    """
+    file_ext = filename.lower().split('.')[-1]
+    
+    try:
+        # PDF files
+        if file_ext == 'pdf':
+            pdf_reader = PdfReader(io.BytesIO(content))
+            page_count = len(pdf_reader.pages)
+            extracted_text = ""
+            
+            # Try regular text extraction first
+            for page in pdf_reader.pages:
+                page_text = page.extract_text()
+                if page_text:
+                    extracted_text += page_text + "\n"
+            
+            # If no text extracted, it's likely a scanned PDF - use OCR
+            if len(extracted_text.strip()) < 50:
+                logging.info("PDF has no text, attempting OCR...")
+                images = convert_from_bytes(content)
+                extracted_text = ""
+                for i, image in enumerate(images):
+                    text = pytesseract.image_to_string(image)
+                    extracted_text += f"\n--- Page {i+1} ---\n{text}\n"
+                logging.info(f"OCR extracted {len(extracted_text)} characters")
+            
+            return extracted_text, page_count
+        
+        # DOCX files
+        elif file_ext == 'docx':
+            doc = Document(io.BytesIO(content))
+            extracted_text = "\n".join([para.text for para in doc.paragraphs])
+            return extracted_text, len(doc.paragraphs) // 20 or 1  # Estimate pages
+        
+        # TXT files
+        elif file_ext == 'txt':
+            extracted_text = content.decode('utf-8', errors='ignore')
+            return extracted_text, len(extracted_text) // 3000 or 1  # Estimate pages
+        
+        # Image files (JPG, PNG, JPEG)
+        elif file_ext in ['jpg', 'jpeg', 'png', 'bmp', 'tiff']:
+            image = Image.open(io.BytesIO(content))
+            extracted_text = pytesseract.image_to_string(image)
+            return extracted_text, 1
+        
+        else:
+            raise HTTPException(status_code=400, detail=f"Unsupported file type: {file_ext}")
+    
+    except Exception as e:
+        logging.error(f"Text extraction error: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Could not extract text from file: {str(e)}")
+
 @api_router.post("/contract/analyze")
 async def analyze_contract(file: UploadFile = File(...)):
     try:
