@@ -336,7 +336,7 @@ const ContractAnalysis = () => {
             <div className="flex-1 overflow-y-auto p-4 space-y-4" data-testid="contract-chat-messages">
               {chatMessages.length === 0 ? (
                 <div className="text-center py-8 text-stone-500">
-                  <p className="text-sm">Ask any question about this contract</p>
+                  <p className="text-sm">Ask any question about this document</p>
                 </div>
               ) : (
                 chatMessages.map((msg, idx) => (
