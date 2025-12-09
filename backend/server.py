@@ -651,11 +651,13 @@ KEY_EXCERPTS: [3-5 most important text excerpts from the document, each 50-100 w
             extracted_text=extracted_text,
             document_type=doc_type,
             risk_level=risk_level,
+            page_count=page_count,
             clauses_safe=clauses_safe,
             clauses_attention=clauses_attention,
             clauses_violates=clauses_violates,
             summary=summary,
-            recommendations=recommendations
+            recommendations=recommendations,
+            key_excerpts=key_excerpts
         )
         
         # Store in database
