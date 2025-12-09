@@ -137,17 +137,30 @@ const Chat = () => {
                   className="bg-white border border-stone-100 text-stone-800 rounded-2xl rounded-tl-sm px-6 py-6 max-w-[95%] shadow-sm prose prose-stone"
                   data-testid={`ai-message-${index}`}
                 >
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    rehypePlugins={[rehypeRaw]}
-                    components={{
-                      a: ({node, ...props}) => (
-                        <a {...props} target="_blank" rel="noopener noreferrer" className="text-orange-700 hover:underline font-medium" />
-                      )
-                    }}
-                  >
-                    {message.content}
-                  </ReactMarkdown>
+                  {message.isTyping && typingMessageIndex === index ? (
+                    <TypingAnimation
+                      content={message.content}
+                      speed={15}
+                      onComplete={() => {
+                        setTypingMessageIndex(null);
+                        setMessages(prev => prev.map((msg, idx) => 
+                          idx === index ? { ...msg, isTyping: false } : msg
+                        ));
+                      }}
+                    />
+                  ) : (
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      rehypePlugins={[rehypeRaw]}
+                      components={{
+                        a: ({node, ...props}) => (
+                          <a {...props} target="_blank" rel="noopener noreferrer" className="text-orange-700 hover:underline font-medium" />
+                        )
+                      }}
+                    >
+                      {message.content}
+                    </ReactMarkdown>
+                  )}
                 </div>
               )}
             </div>
