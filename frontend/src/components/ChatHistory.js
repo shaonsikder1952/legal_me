@@ -84,10 +84,28 @@ const ChatHistory = ({ onSelectSession, currentSessionId, onNewChat }) => {
       {isOpen && (
         <div className="fixed left-0 top-0 bottom-0 w-80 bg-white border-r border-stone-200 shadow-xl z-40 overflow-y-auto">
           <div className="p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <MessageSquare className="w-6 h-6 text-orange-700" />
-              <h2 className="font-serif text-2xl text-stone-900">Chat History</h2>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <MessageSquare className="w-6 h-6 text-orange-700" />
+                <h2 className="font-serif text-2xl text-stone-900">Chats</h2>
+              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="w-8 h-8 rounded-lg hover:bg-stone-100 flex items-center justify-center"
+              >
+                <X className="w-5 h-5 text-stone-500" />
+              </button>
             </div>
+
+            {/* New Chat Button */}
+            <button
+              onClick={handleNewChat}
+              className="w-full flex items-center gap-3 bg-orange-700 text-white hover:bg-orange-800 rounded-xl px-4 py-3 mb-4 font-medium"
+              data-testid="new-chat-button"
+            >
+              <Plus className="w-5 h-5" />
+              <span>New Chat</span>
+            </button>
 
             {loading ? (
               <div className="text-center py-8 text-stone-500">Loading...</div>
