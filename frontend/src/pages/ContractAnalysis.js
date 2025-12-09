@@ -226,11 +226,6 @@ const ContractAnalysis = () => {
         <span className={`px-5 py-3 rounded-full text-base font-bold border-2 ${styles[level]}`}>
           {labels[level]}
         </span>
-        {confidence && (
-          <span className="px-3 py-1 bg-stone-100 text-stone-700 rounded-full text-sm font-medium">
-            {confidence}% Confidence
-          </span>
-        )}
       </div>
     );
   };
