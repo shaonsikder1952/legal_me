@@ -1,0 +1,347 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { ArrowLeft, Upload, FileText, Loader2, AlertTriangle, CheckCircle, AlertCircle, Download } from 'lucide-react';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
+
+const ContractAnalysis = () => {
+  const navigate = useNavigate();
+  const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [analysis, setAnalysis] = useState(null);
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile && selectedFile.type === 'application/pdf') {
+      setFile(selectedFile);
+    } else {
+      alert('Please select a PDF file');
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!file) return;
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await axios.post(`${API}/contract/analyze`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setAnalysis(response.data);
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Error analyzing contract. Please try again.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const getRiskIcon = (level) => {
+    switch (level) {
+      case 'high':
+        return <AlertTriangle className="w-6 h-6 text-red-700" />;
+      case 'medium':
+        return <AlertCircle className="w-6 h-6 text-yellow-700" />;
+      default:
+        return <CheckCircle className="w-6 h-6 text-green-700" />;
+    }
+  };
+
+  const getRiskBadge = (level) => {
+    const styles = {
+      high: 'bg-red-50 text-red-700 border-red-200',
+      medium: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+      low: 'bg-green-50 text-green-700 border-green-200'
+    };
+    const labels = { high: '🔴 High Risk', medium: '🟡 Medium Risk', low: '🟢 Low Risk' };
+    return (
+      <span className={`px-4 py-2 rounded-full text-sm font-medium border ${styles[level]}`}>
+        {labels[level]}
+      </span>
+    );
+  };
+
+  if (!analysis) {
+    return (
+      <div className="min-h-screen bg-stone-50">
+        <div className="max-w-4xl mx-auto p-6 md:p-12">
+          {/* Header */}
+          <div className="mb-8">
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center gap-2 text-stone-600 hover:text-stone-900 mb-4"
+              data-testid="back-button"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Home</span>
+            </button>
+            <h1 className="font-serif text-4xl md:text-5xl text-stone-900 mb-3">Contract Analysis</h1>
+            <p className="text-lg text-stone-600">Upload a contract to analyze for risky clauses and legal violations</p>
+          </div>
+
+          {/* Upload Section */}
+          <div className="bg-white border-2 border-dashed border-stone-300 rounded-3xl p-12 text-center hover:border-orange-400">
+            <div className="max-w-md mx-auto">
+              <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Upload className="w-10 h-10 text-orange-700" strokeWidth={1.5} />
+              </div>
+              
+              <h2 className="font-serif text-2xl text-stone-900 mb-3">Upload Your Contract</h2>
+              <p className="text-stone-600 mb-6">PDF files only, max 10MB</p>
+
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={handleFileChange}
+                className="hidden"
+                id="file-upload"
+                data-testid="file-input"
+              />
+              
+              <label
+                htmlFor="file-upload"
+                className="inline-flex items-center gap-2 bg-stone-900 text-white hover:bg-stone-800 h-12 px-8 rounded-full font-medium cursor-pointer"
+              >
+                <FileText className="w-5 h-5" />
+                Choose File
+              </label>
+
+              {file && (
+                <div className="mt-6 p-4 bg-stone-50 rounded-2xl">
+                  <p className="text-sm text-stone-600 mb-2">Selected file:</p>
+                  <p className="font-medium text-stone-900" data-testid="selected-filename">{file.name}</p>
+                  <button
+                    onClick={handleUpload}
+                    disabled={uploading}
+                    className="mt-4 bg-orange-700 text-white hover:bg-orange-800 h-12 px-8 rounded-full font-medium shadow-lg shadow-orange-900/20 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
+                    data-testid="analyze-button"
+                  >
+                    {uploading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Analyzing...
+                      </>
+                    ) : (
+                      <>
+                        Analyze Contract
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-stone-50">
+      <div className="max-w-6xl mx-auto p-6 md:p-12">
+        {/* Header */}
+        <div className="mb-8">
+          <button
+            onClick={() => {
+              setAnalysis(null);
+              setFile(null);
+            }}
+            className="flex items-center gap-2 text-stone-600 hover:text-stone-900 mb-4"
+            data-testid="back-to-upload"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span>Analyze Another</span>
+          </button>
+        </div>
+
+        {/* Report */}
+        <div className="bg-white rounded-3xl shadow-lg border border-stone-100 p-8 md:p-12" data-testid="analysis-report">
+          {/* Title */}
+          <div className="mb-8">
+            <h1 className="font-serif text-4xl md:text-5xl text-stone-900 mb-4">LegalMe Contract Review Report</h1>
+            <div className="h-1 w-24 bg-orange-600 rounded mb-6"></div>
+          </div>
+
+          {/* Overview */}
+          <section className="mb-10">
+            <h2 className="font-serif text-3xl text-stone-900 mb-4">1. Document Overview</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 bg-stone-50 rounded-xl">
+                <p className="text-sm text-stone-500 mb-1">Type</p>
+                <p className="font-medium text-stone-900 capitalize">{analysis.document_type}</p>
+              </div>
+              <div className="p-4 bg-stone-50 rounded-xl">
+                <p className="text-sm text-stone-500 mb-1">Risk Level</p>
+                <div className="mt-2">{getRiskBadge(analysis.risk_level)}</div>
+              </div>
+              <div className="p-4 bg-stone-50 rounded-xl">
+                <p className="text-sm text-stone-500 mb-1">Filename</p>
+                <p className="font-medium text-stone-900">{analysis.filename}</p>
+              </div>
+              <div className="p-4 bg-stone-50 rounded-xl">
+                <p className="text-sm text-stone-500 mb-1">Date Reviewed</p>
+                <p className="font-medium text-stone-900">{new Date(analysis.timestamp).toLocaleDateString()}</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Summary */}
+          <section className="mb-10">
+            <h2 className="font-serif text-3xl text-stone-900 mb-4">2. Summary</h2>
+            <p className="text-stone-700 leading-relaxed">{analysis.summary}</p>
+          </section>
+
+          {/* Safe Clauses */}
+          {analysis.clauses_safe.length > 0 && (
+            <section className="mb-10">
+              <h2 className="font-serif text-3xl text-stone-900 mb-4 flex items-center gap-3">
+                <span className="text-2xl">🟢</span>
+                3. Clauses That Are Acceptable
+              </h2>
+              <div className="space-y-4">
+                {analysis.clauses_safe.map((clause, idx) => (
+                  <div key={idx} className="p-6 bg-green-50 border border-green-200 rounded-2xl">
+                    <p className="font-medium text-stone-900 mb-2">{clause.explanation}</p>
+                    <p className="text-sm text-stone-600 mb-3 italic">&quot;...{clause.clause}...&quot;</p>
+                    <a
+                      href={clause.law_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-orange-700 hover:underline font-medium"
+                    >
+                      Reference: {clause.law} →
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Attention Clauses */}
+          {analysis.clauses_attention.length > 0 && (
+            <section className="mb-10">
+              <h2 className="font-serif text-3xl text-stone-900 mb-4 flex items-center gap-3">
+                <span className="text-2xl">🟡</span>
+                4. Clauses That May Be Problematic
+              </h2>
+              <div className="space-y-4">
+                {analysis.clauses_attention.map((clause, idx) => (
+                  <div key={idx} className="p-6 bg-yellow-50 border border-yellow-200 rounded-2xl">
+                    <p className="font-medium text-stone-900 mb-2">{clause.explanation}</p>
+                    <p className="text-sm text-stone-600 mb-3 italic">&quot;...{clause.clause}...&quot;</p>
+                    <a
+                      href={clause.law_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-orange-700 hover:underline font-medium"
+                    >
+                      Reference: {clause.law} →
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Violates Clauses */}
+          {analysis.clauses_violates.length > 0 && (
+            <section className="mb-10">
+              <h2 className="font-serif text-3xl text-stone-900 mb-4 flex items-center gap-3">
+                <span className="text-2xl">🔴</span>
+                5. Clauses That Violate German Law
+              </h2>
+              <div className="space-y-4">
+                {analysis.clauses_violates.map((clause, idx) => (
+                  <div key={idx} className="p-6 bg-red-50 border border-red-200 rounded-2xl">
+                    <p className="font-medium text-stone-900 mb-2">{clause.explanation}</p>
+                    <p className="text-sm text-stone-600 mb-3 italic">&quot;...{clause.clause}...&quot;</p>
+                    <a
+                      href={clause.law_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-orange-700 hover:underline font-medium"
+                    >
+                      Reference: {clause.law} →
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Recommendations */}
+          <section className="mb-10">
+            <h2 className="font-serif text-3xl text-stone-900 mb-4">6. Recommendations</h2>
+            <p className="text-stone-700 leading-relaxed">{analysis.recommendations}</p>
+          </section>
+
+          {/* Divider */}
+          <hr className="my-10 border-stone-200" />
+
+          {/* Next Steps */}
+          <section>
+            <h2 className="font-serif text-3xl text-stone-900 mb-6">Next Steps</h2>
+            <div className="space-y-4">
+              <div className="flex items-start gap-4 p-4 bg-stone-50 rounded-xl hover:bg-stone-100">
+                <span className="font-bold text-orange-700">1.</span>
+                <div>
+                  <p className="text-stone-900">
+                    Report this issue:{' '}
+                    <a
+                      href="https://www.verbraucherzentrale.de/beschwerde"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-orange-700 hover:underline font-medium"
+                    >
+                      Open reporting page →
+                    </a>
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4 p-4 bg-stone-50 rounded-xl hover:bg-stone-100">
+                <span className="font-bold text-orange-700">2.</span>
+                <div>
+                  <p className="text-stone-900">
+                    See safer alternatives:{' '}
+                    <a
+                      href="https://www.verbraucherzentrale.de"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-orange-700 hover:underline font-medium"
+                    >
+                      View safer options →
+                    </a>
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4 p-4 bg-stone-50 rounded-xl hover:bg-stone-100">
+                <span className="font-bold text-orange-700">3.</span>
+                <div>
+                  <p className="text-stone-900">
+                    Check another document:{' '}
+                    <button
+                      onClick={() => {
+                        setAnalysis(null);
+                        setFile(null);
+                      }}
+                      className="text-orange-700 hover:underline font-medium"
+                    >
+                      Upload another file →
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ContractAnalysis;
