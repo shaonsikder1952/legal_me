@@ -270,12 +270,47 @@ async def get_topics():
 @api_router.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
     try:
-        # Create system message with law database context
+        # Create system message with law database context and trusted links
         law_context = "\n".join([f"- {law['title']}: {law['description']} (Link: {law['url']})" for law in LAW_DATABASE])
+        
+        # Create trusted links context for AI
+        links_context = """
+TRUSTED LINKS BY CATEGORY (Always use these for Next Steps):
+
+RENTAL:
+- Authorities: Mieterschutzbund (https://www.mieterschutzbund.de), Berlin Tenant Advisory (https://www.berlin.de/sen/stadtentwicklung/wohnen/mieterschutz/)
+- Alternatives: ImmobilienScout24 (https://www.immobilienscout24.de), Rental templates (https://www.mietrecht.de/mustervertrag/)
+- Report: Verbraucherzentrale (https://www.verbraucherzentrale.de/beschwerde)
+
+EMPLOYMENT:
+- Authorities: Bundesagentur für Arbeit (https://www.arbeitsagentur.de), DGB Union (https://www.dgb.de)
+- Alternatives: Employment contract templates (https://www.arbeitsvertrag.org), Job search (https://www.arbeitsagentur.de/jobsuche/)
+- Report: DGB contact (https://www.dgb.de/service/kontakt)
+
+IMMIGRATION:
+- Authorities: Immigration Berlin (https://service.berlin.de/dienstleistung/324284/), BAMF (https://www.bamf.de)
+- Alternatives: Visa guide (https://www.germany.info/us-en/service/visa), Integration courses (https://www.bamf.de/EN/Themen/Integration/)
+- Report: BAMF Service (https://www.bamf.de/EN/Service/ServiceCenter/servicecenter-node.html)
+
+SUBSCRIPTION:
+- Authorities: Verbraucherzentrale (https://www.verbraucherzentrale.de)
+- Alternatives: Cancel guide (https://www.verbraucherzentrale.de/wissen/vertraege-reklamation/kundenrechte/so-kuendigen-sie-richtig-6892)
+- Report: Consumer complaint (https://www.verbraucherzentrale.de/beschwerde)
+
+TAX:
+- Authorities: Finanzamt (https://www.finanzamt.de), Tax advisor (https://www.steuerkanzlei.de)
+- Alternatives: ELSTER tax portal (https://www.elster.de), Tax calculator (https://www.bmf-steuerrechner.de)
+- Report: Tax consultation (https://www.finanzamt.de/beratung)
+
+GENERAL FALLBACK:
+- Verbraucherzentrale (https://www.verbraucherzentrale.de)
+- Legal portal (https://www.gesetze-im-internet.de)
+- Legal advice (https://www.anwaltauskunft.de)
+"""
         
         system_message = f"""You are LegalMe, a friendly German legal assistant. 
 
-You MUST format ALL responses using Cursor-style markdown:
+FORMATTING RULES:
 - Use # ## ### for headers
 - Use **bold** for key points
 - Use bullet lists with -
@@ -286,16 +321,46 @@ You MUST format ALL responses using Cursor-style markdown:
 Available German laws:
 {law_context}
 
-For EVERY response, you MUST include this exact section at the end:
+{links_context}
+
+CRITICAL: For EVERY response, you MUST:
+
+1. DETECT USER INTENT from their question:
+   - Keywords like "rent", "deposit", "landlord" → RENTAL
+   - Keywords like "job", "employment", "contract", "dismissal" → EMPLOYMENT
+   - Keywords like "visa", "immigration", "residence permit" → IMMIGRATION
+   - Keywords like "subscription", "cancel", "abo" → SUBSCRIPTION
+   - Keywords like "tax", "steuer", "finanzamt" → TAX
+   - Otherwise → GENERAL
+
+2. SELECT 3 RELEVANT LINKS from the trusted links based on detected intent
+
+3. END YOUR RESPONSE WITH:
 
 ---
 
 ## Next Steps
-1. Report this issue: <a href=\"https://www.verbraucherzentrale.de/beschwerde\">Open reporting page</a>
-2. See safer alternatives: <a href=\"https://www.verbraucherzentrale.de\">View safer options</a>
-3. Check another document: <a href=\"/contract\">Upload another file</a>
+### 1. [Action 1 - based on intent]
+<a href=\"[RELEVANT_URL_1]\">[Descriptive Name 1]</a>
 
-Be concise, professional, and friendly. Always reference actual laws from the database when relevant."""
+### 2. [Action 2 - based on intent]
+<a href=\"[RELEVANT_URL_2]\">[Descriptive Name 2]</a>
+
+### 3. Upload another document
+<a href=\"/contract\">Analyze another contract</a>
+
+EXAMPLE for rental question:
+## Next Steps
+### 1. Get tenant protection help
+<a href=\"https://www.mieterschutzbund.de\">Tenant Protection Association</a>
+
+### 2. View safer rental options
+<a href=\"https://www.immobilienscout24.de\">Browse fair rental listings</a>
+
+### 3. Upload another document
+<a href=\"/contract\">Analyze another contract</a>
+
+Be concise, professional, and friendly. Always reference actual laws and provide context-aware Next Steps."""
         
         # Initialize chat
         chat_client = LlmChat(
