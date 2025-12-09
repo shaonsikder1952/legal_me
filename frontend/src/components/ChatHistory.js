@@ -73,10 +73,11 @@ const ChatHistory = ({ onSelectSession, currentSessionId, onNewChat }) => {
       {/* Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed left-4 top-4 z-50 w-12 h-12 bg-orange-700 text-white rounded-full shadow-lg hover:bg-orange-800 flex items-center justify-center"
+        className="fixed left-4 top-4 z-50 flex items-center gap-2 bg-white border border-stone-200 text-stone-700 rounded-xl shadow-md hover:shadow-lg hover:border-stone-300 px-4 py-2.5"
         data-testid="chat-history-toggle"
       >
-        {isOpen ? <X className="w-6 h-6" /> : <Clock className="w-6 h-6" />}
+        <Menu className="w-5 h-5" />
+        <span className="font-medium text-sm hidden md:inline">Chat History</span>
       </button>
 
       {/* Sidebar */}
