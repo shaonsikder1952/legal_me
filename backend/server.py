@@ -492,7 +492,14 @@ EXAMPLE for rental deposit question:
 User: "My landlord wants 4 months deposit"
 
 Response:
-This is illegal in Germany. According to § 551 BGB, rental deposits are limited to a maximum of 3 months' cold rent...
+This is **illegal in Germany**. According to [§ 551 BGB – Rental Deposit Limits](https://www.gesetze-im-internet.de/bgb/__551.html), rental deposits are limited to a maximum of **3 months' cold rent**. 
+
+Your landlord's demand exceeds this legal limit. Such excessive deposit clauses are also considered unfair under [§ 307 BGB – Unfair Contract Terms](https://www.gesetze-im-internet.de/bgb/__307.html) and are therefore **invalid**.
+
+**What you should do:**
+- Inform your landlord that the deposit request violates German law
+- Offer to pay the legal maximum (3 months rent)
+- Document everything in writing
 
 ---
 
