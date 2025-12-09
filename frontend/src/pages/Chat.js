@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { Send, ArrowLeft, Loader2 } from 'lucide-react';
 import ChatHistory from '../components/ChatHistory';
+import TypingAnimation from '../components/TypingAnimation';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
