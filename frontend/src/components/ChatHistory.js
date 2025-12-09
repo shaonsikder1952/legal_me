@@ -114,26 +114,74 @@ const ChatHistory = ({ onSelectSession, currentSessionId, onNewChat }) => {
             ) : (
               <div className="space-y-2">
                 {sessions.map((session) => (
-                  <button
+                  <div
                     key={session.session_id}
-                    onClick={() => {
-                      onSelectSession(session.session_id);
-                      setIsOpen(false);
-                    }}
-                    className={`w-full text-left p-4 rounded-xl hover:bg-stone-50 border ${
+                    className={`relative group rounded-xl border ${
                       currentSessionId === session.session_id
                         ? 'border-orange-200 bg-orange-50'
-                        : 'border-stone-100'
+                        : 'border-stone-100 hover:bg-stone-50'
                     }`}
-                    data-testid={`history-session-${session.session_id}`}
                   >
-                    <p className="text-sm font-medium text-stone-900 mb-1 truncate">
-                      {session.preview}
-                    </p>
-                    <p className="text-xs text-stone-500">
-                      {formatTimestamp(session.timestamp)}
-                    </p>
-                  </button>
+                    {editingId === session.session_id ? (
+                      <div className="p-3">
+                        <input
+                          type="text"
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleRename(session.session_id, editName);
+                            if (e.key === 'Escape') setEditingId(null);
+                          }}
+                          onBlur={() => handleRename(session.session_id, editName)}
+                          className="w-full px-2 py-1 text-sm border border-orange-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+                          autoFocus
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => {
+                            onSelectSession(session.session_id);
+                            setIsOpen(false);
+                          }}
+                          className="w-full text-left p-4"
+                          data-testid={`history-session-${session.session_id}`}
+                        >
+                          <p className="text-sm font-medium text-stone-900 mb-1 truncate pr-16">
+                            {session.name || session.preview}
+                          </p>
+                          <p className="text-xs text-stone-500">
+                            {formatTimestamp(session.timestamp)}
+                          </p>
+                        </button>
+                        
+                        {/* Action Buttons */}
+                        <div className="absolute right-2 top-2 hidden group-hover:flex gap-1">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingId(session.session_id);
+                              setEditName(session.name || session.preview);
+                            }}
+                            className="p-2 hover:bg-orange-100 rounded-lg"
+                            title="Rename"
+                          >
+                            <Edit2 className="w-3.5 h-3.5 text-orange-700" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(session.session_id);
+                            }}
+                            className="p-2 hover:bg-red-100 rounded-lg"
+                            title="Delete"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 text-red-600" />
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 ))}
               </div>
             )}
