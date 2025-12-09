@@ -89,7 +89,11 @@ const Chat = () => {
 
   return (
     <div className="min-h-screen bg-stone-50 flex items-center justify-center p-4">
-      <ChatHistory onSelectSession={loadSessionMessages} currentSessionId={sessionId} />
+      <ChatHistory 
+        onSelectSession={loadSessionMessages} 
+        currentSessionId={sessionId}
+        onNewChat={handleNewChat}
+      />
       <div className="max-w-3xl w-full h-[calc(100vh-4rem)] flex flex-col bg-white shadow-2xl shadow-stone-200/50 rounded-t-3xl border-x border-t border-stone-100">
         {/* Header */}
         <div className="p-6 border-b border-stone-100 flex items-center justify-between bg-white rounded-t-3xl">
