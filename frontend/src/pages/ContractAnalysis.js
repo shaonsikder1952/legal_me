@@ -246,7 +246,7 @@ const ContractAnalysis = () => {
               </div>
               
               <h2 className="font-serif text-2xl text-stone-900 mb-3">Upload Your Document</h2>
-              <p className="text-stone-600 mb-6">PDF files only, max 50MB</p>
+              <p className="text-stone-600 mb-6">PDF files only, any size supported</p>
 
               <input
                 type="file"
