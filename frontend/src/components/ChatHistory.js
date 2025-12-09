@@ -40,6 +40,34 @@ const ChatHistory = ({ onSelectSession, currentSessionId, onNewChat }) => {
     return date.toLocaleDateString();
   };
 
+  const handleRename = async (sessionId, newName) => {
+    try {
+      await axios.put(`${API}/chat/${sessionId}/rename`, { name: newName });
+      setSessions(sessions.map(s => 
+        s.session_id === sessionId ? { ...s, name: newName, preview: newName } : s
+      ));
+      setEditingId(null);
+    } catch (error) {
+      console.error('Error renaming session:', error);
+    }
+  };
+
+  const handleDelete = async (sessionId) => {
+    if (!window.confirm('Delete this chat?')) return;
+    
+    try {
+      await axios.delete(`${API}/chat/${sessionId}`);
+      setSessions(sessions.filter(s => s.session_id !== sessionId));
+    } catch (error) {
+      console.error('Error deleting session:', error);
+    }
+  };
+
+  const handleNewChat = () => {
+    setIsOpen(false);
+    if (onNewChat) onNewChat();
+  };
+
   return (
     <>
       {/* Toggle Button */}
