@@ -234,8 +234,8 @@ const ContractAnalysis = () => {
               <ArrowLeft className="w-5 h-5" />
               <span>Back to Home</span>
             </button>
-            <h1 className="font-serif text-4xl md:text-5xl text-stone-900 mb-3">Contract Analysis</h1>
-            <p className="text-lg text-stone-600">Upload a contract to analyze for risky clauses and legal violations</p>
+            <h1 className="font-serif text-4xl md:text-5xl text-stone-900 mb-3">Legal Document Analysis</h1>
+            <p className="text-lg text-stone-600">Upload any legal document to analyze for risky clauses and legal violations</p>
           </div>
 
           {/* Upload Section */}
