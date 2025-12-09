@@ -948,6 +948,7 @@ RELEVANT_LAWS: [List 2-3 specific German laws being violated or relevant, in MAS
         summary = "Document analysis complete."
         recommendations = "Review all highlighted clauses carefully."
         key_excerpts = []
+        relevant_laws = []
         
         if "TYPE:" in ai_analysis:
             doc_type = ai_analysis.split("TYPE:")[1].split("\n")[0].strip().lower()
@@ -959,11 +960,25 @@ RELEVANT_LAWS: [List 2-3 specific German laws being violated or relevant, in MAS
                 summary = summary_text.split("KEY_EXCERPTS:")[0].strip() if "KEY_EXCERPTS:" in summary_text else summary_text.strip()
         if "RECOMMENDATIONS:" in ai_analysis:
             rec_text = ai_analysis.split("RECOMMENDATIONS:")[1]
-            recommendations = rec_text.split("KEY_EXCERPTS:")[0].strip() if "KEY_EXCERPTS:" in rec_text else rec_text.strip()
+            if "KEY_EXCERPTS:" in rec_text:
+                recommendations = rec_text.split("KEY_EXCERPTS:")[0].strip()
+            elif "RELEVANT_LAWS:" in rec_text:
+                recommendations = rec_text.split("RELEVANT_LAWS:")[0].strip()
+            else:
+                recommendations = rec_text.strip()
         if "KEY_EXCERPTS:" in ai_analysis:
-            excerpts_text = ai_analysis.split("KEY_EXCERPTS:")[1].strip()
-            # Extract key excerpts (limited to keep report concise)
-            key_excerpts = [e.strip() for e in excerpts_text.split("\n") if e.strip()][:5]
+            excerpts_text = ai_analysis.split("KEY_EXCERPTS:")[1]
+            if "RELEVANT_LAWS:" in excerpts_text:
+                excerpts_text = excerpts_text.split("RELEVANT_LAWS:")[0]
+            key_excerpts = [e.strip() for e in excerpts_text.split("\n") if e.strip() and not e.strip().startswith('-')][:5]
+        if "RELEVANT_LAWS:" in ai_analysis:
+            laws_text = ai_analysis.split("RELEVANT_LAWS:")[1].strip()
+            # Extract each law line (they should be markdown links)
+            for line in laws_text.split("\n"):
+                if line.strip() and (line.strip().startswith('-') or '[§' in line):
+                    relevant_laws.append(line.strip().lstrip('- '))
+        
+        logging.info(f"Parsed relevant laws: {relevant_laws}")
         
         # Create analysis document
         analysis = ContractAnalysis(
