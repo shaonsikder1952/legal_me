@@ -315,6 +315,7 @@ class ContractAnalysis(BaseModel):
     clauses_violates: List[dict]
     summary: str
     recommendations: str
+    relevant_laws: List[str]
     key_excerpts: List[str]
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
