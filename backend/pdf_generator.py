@@ -51,6 +51,40 @@ def generate_contract_pdf(analysis_data):
     story.append(Paragraph('🧾 LegalMe Legal Document Analysis Report', title_style))
     story.append(Spacer(1, 0.3*inch))
     
+    # SCAM ALERT if detected
+    if analysis_data.get('is_likely_scam', False):
+        scam_style = ParagraphStyle(
+            'ScamAlert',
+            parent=styles['Heading1'],
+            fontSize=18,
+            textColor=colors.red,
+            spaceAfter=12,
+            spaceBefore=12,
+            alignment=TA_CENTER,
+            backColor=colors.HexColor('#FEE2E2')
+        )
+        
+        story.append(Paragraph('⚠️ SCAM ALERT - MOST LIKELY A SCAM ⚠️', scam_style))
+        story.append(Spacer(1, 0.2*inch))
+        
+        scam_body = ParagraphStyle(
+            'ScamBody',
+            parent=body_style,
+            textColor=colors.red,
+            backColor=colors.HexColor('#FEF2F2')
+        )
+        
+        story.append(Paragraph('<b>This document shows multiple indicators of a scam or fraudulent scheme.</b>', scam_body))
+        story.append(Paragraph('<b>DO NOT proceed with payments, personal information sharing, or agreements.</b>', scam_body))
+        story.append(Spacer(1, 0.2*inch))
+        
+        scam_indicators = analysis_data.get('scam_indicators', [])
+        story.append(Paragraph(f'<b>Scam Indicators Detected ({len(scam_indicators)}):</b>', heading_style))
+        for indicator in scam_indicators:
+            story.append(Paragraph(f"• <b>{indicator['indicator']}</b> ({indicator['severity'].upper()})", body_style))
+        
+        story.append(Spacer(1, 0.3*inch))
+    
     # 1. Document Overview
     story.append(Paragraph('1. Document Overview', heading_style))
     
