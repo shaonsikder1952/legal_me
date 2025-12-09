@@ -443,12 +443,15 @@ CONVERSATION MEMORY:
 You are continuing a conversation with this user. Here is the recent history:
 {conversation_context}
 
-IMPORTANT: 
-- Remember what the user asked before
-- Reference previous topics if relevant
-- Don't repeat information already provided
-- Maintain continuity in your responses
-- Each session is a separate conversation - don't mix them up"""
+CRITICAL MEMORY RULES:
+- This is session ID: {request.session_id}
+- ONLY use conversation history from THIS session
+- DO NOT mix up different chat sessions
+- Remember what the user asked before in THIS conversation
+- Reference previous topics from THIS session if relevant
+- Don't repeat information already provided in THIS session
+- Maintain continuity based on THIS conversation's context
+- If this is a new session with no history, treat it as a fresh conversation"""
         
         # Initialize chat with memory
         chat_client = LlmChat(
