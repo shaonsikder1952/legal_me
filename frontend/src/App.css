@@ -1,34 +1,95 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* Remove default centering */
+.App {
+  text-align: left;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+/* Smooth transitions for interactive elements only */
+button {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+button:hover {
+  transform: translateY(-2px);
 }
 
-.App-link {
-    color: #61dafb;
+input, textarea {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+/* Markdown styles for chat */
+.prose {
+  max-width: none;
+}
+
+.prose h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  color: #1C1917;
+}
+
+.prose h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: #1C1917;
+}
+
+.prose h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: #44403C;
+}
+
+.prose p {
+  margin-bottom: 1rem;
+  line-height: 1.75;
+  color: #57534E;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: #1C1917;
+}
+
+.prose ul, .prose ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+  line-height: 1.75;
+  color: #57534E;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid #E7E5E4;
+  margin: 1.5rem 0;
+}
+
+.prose a {
+  color: #C2410C;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.prose a:hover {
+  text-decoration: underline;
+}
+
+.prose code {
+  background-color: #F5F5F4;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: 'JetBrains Mono', monospace;
 }
