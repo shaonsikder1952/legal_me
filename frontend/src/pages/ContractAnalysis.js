@@ -278,11 +278,11 @@ const ContractAnalysis = () => {
                     {uploading ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        Analyzing...
+                        Analyzing Document...
                       </>
                     ) : (
                       <>
-                        Analyze Contract
+                        Analyze Document
                       </>
                     )}
                   </button>
