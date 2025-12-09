@@ -615,23 +615,33 @@ KEY_EXCERPTS: [3-5 most important text excerpts from the document, each 50-100 w
         chat_client = LlmChat(
             api_key=os.environ['EMERGENT_LLM_KEY'],
             session_id=f"contract_{uuid.uuid4()}",
-            system_message="You are a legal document analyzer. Be concise and professional."
+            system_message="You are a professional German legal document analyzer. Provide comprehensive analysis."
         )
         chat_client.with_model("gemini", "gemini-2.0-flash")
         
-        ai_analysis = await chat_client.send_message(UserMessage(text=summary_prompt))
+        ai_analysis = await chat_client.send_message(UserMessage(text=merged_prompt))
         
         # Parse AI response
         doc_type = "general"
         summary = "Document analysis complete."
         recommendations = "Review all highlighted clauses carefully."
+        key_excerpts = []
         
         if "TYPE:" in ai_analysis:
-            doc_type = ai_analysis.split("TYPE:")[1].split("\n")[0].strip()
+            doc_type = ai_analysis.split("TYPE:")[1].split("\n")[0].strip().lower()
         if "SUMMARY:" in ai_analysis:
-            summary = ai_analysis.split("SUMMARY:")[1].split("RECOMMENDATIONS:")[0].strip()
+            summary_text = ai_analysis.split("SUMMARY:")[1]
+            if "RECOMMENDATIONS:" in summary_text:
+                summary = summary_text.split("RECOMMENDATIONS:")[0].strip()
+            else:
+                summary = summary_text.split("KEY_EXCERPTS:")[0].strip() if "KEY_EXCERPTS:" in summary_text else summary_text.strip()
         if "RECOMMENDATIONS:" in ai_analysis:
-            recommendations = ai_analysis.split("RECOMMENDATIONS:")[1].strip()
+            rec_text = ai_analysis.split("RECOMMENDATIONS:")[1]
+            recommendations = rec_text.split("KEY_EXCERPTS:")[0].strip() if "KEY_EXCERPTS:" in rec_text else rec_text.strip()
+        if "KEY_EXCERPTS:" in ai_analysis:
+            excerpts_text = ai_analysis.split("KEY_EXCERPTS:")[1].strip()
+            # Extract key excerpts (limited to keep report concise)
+            key_excerpts = [e.strip() for e in excerpts_text.split("\n") if e.strip()][:5]
         
         # Create analysis document
         analysis = ContractAnalysis(
