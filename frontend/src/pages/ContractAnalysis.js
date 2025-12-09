@@ -347,9 +347,22 @@ const ContractAnalysis = () => {
                       </div>
                     ) : (
                       <div className="bg-orange-50 border border-orange-100 text-stone-800 rounded-xl px-4 py-3 max-w-[85%] prose prose-sm">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-                          {msg.content}
-                        </ReactMarkdown>
+                        {msg.isTyping && typingMessageIndex === idx ? (
+                          <TypingAnimation
+                            content={msg.content}
+                            speed={15}
+                            onComplete={() => {
+                              setTypingMessageIndex(null);
+                              setChatMessages(prev => prev.map((m, i) => 
+                                i === idx ? { ...m, isTyping: false } : m
+                              ));
+                            }}
+                          />
+                        ) : (
+                          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                            {msg.content}
+                          </ReactMarkdown>
+                        )}
                       </div>
                     )}
                   </div>
