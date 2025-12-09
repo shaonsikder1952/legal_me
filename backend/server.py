@@ -563,23 +563,54 @@ async def analyze_contract(file: UploadFile = File(...)):
         else:
             risk_level = "low"
         
-        # Generate AI summary using Gemini with intent detection
+        # Generate comprehensive AI analysis using chunks
         law_context = "\n".join([f"- {law['title']}: {law['description']}" for law in LAW_DATABASE])
-        summary_prompt = f"""Analyze this contract and provide:
-1. Document type - Choose ONE: rental, employment, subscription, immigration, tax, other
-2. A 3-5 sentence summary
-3. Key recommendations
+        
+        # Analyze document in chunks and merge results
+        chunk_analyses = []
+        for i, chunk in enumerate(text_chunks[:5]):  # Analyze first 5 chunks max
+            chunk_prompt = f"""Analyze this section of a legal document:
 
-Contract text:
-{extracted_text[:2000]}
+Section {i+1}:
+{chunk}
 
-Available laws:
+Identify:
+1. Document type (rental/employment/subscription/immigration/tax/other)
+2. Key terms and conditions
+3. Potential risks or concerns
+4. Important deadlines or fees mentioned
+5. Missing information
+
+Provide brief analysis (2-3 sentences)."""
+
+            chat_client = LlmChat(
+                api_key=os.environ['EMERGENT_LLM_KEY'],
+                session_id=f"analysis_chunk_{uuid.uuid4()}",
+                system_message="You are a legal document analyzer. Be concise and identify key points."
+            )
+            chat_client.with_model("gemini", "gemini-2.0-flash")
+            
+            chunk_analysis = await chat_client.send_message(UserMessage(text=chunk_prompt))
+            chunk_analyses.append(f"Section {i+1}: {chunk_analysis}")
+        
+        # Merge all chunk analyses into final summary
+        merged_prompt = f"""You analyzed a legal document in {len(chunk_analyses)} sections. Here are the findings:
+
+{chr(10).join(chunk_analyses)}
+
+Detected clauses:
+- Safe clauses: {len(clauses_safe)}
+- Attention needed: {len(clauses_attention)}
+- Violations: {len(clauses_violates)}
+
+Available German laws:
 {law_context}
 
-Provide response in this EXACT format:
+Now provide a comprehensive final analysis in this EXACT format:
 TYPE: [rental/employment/subscription/immigration/tax/other]
-SUMMARY: [summary]
-RECOMMENDATIONS: [recommendations]"""
+SUMMARY: [3-5 sentence comprehensive summary covering key points, risks, and overall assessment]
+RECOMMENDATIONS: [Specific actionable recommendations based on the entire document]
+KEY_EXCERPTS: [3-5 most important text excerpts from the document, each 50-100 words]"""
         
         chat_client = LlmChat(
             api_key=os.environ['EMERGENT_LLM_KEY'],
