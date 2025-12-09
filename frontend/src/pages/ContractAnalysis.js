@@ -420,6 +420,58 @@ const ContractAnalysis = () => {
             </button>
           </div>
 
+          {/* SCAM ALERT */}
+          {analysis.is_likely_scam && (
+            <div className="mb-10 bg-red-50 border-4 border-red-500 rounded-2xl p-8 animate-pulse" data-testid="scam-alert">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center">
+                    <AlertTriangle className="w-10 h-10 text-white" strokeWidth={3} />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h2 className="font-serif text-3xl text-red-900 mb-3 font-bold">⚠️ SCAM ALERT - MOST LIKELY A SCAM</h2>
+                  <p className="text-lg text-red-800 mb-4 font-semibold">
+                    This document shows multiple indicators of a scam or fraudulent scheme. 
+                    DO NOT proceed with any payments, personal information sharing, or agreements.
+                  </p>
+                  
+                  <div className="bg-white rounded-xl p-4 mb-4">
+                    <h3 className="font-bold text-red-900 mb-3 text-lg">🚨 Scam Indicators Detected ({analysis.scam_indicators.length}):</h3>
+                    <ul className="space-y-2">
+                      {analysis.scam_indicators.map((indicator, idx) => (
+                        <li key={idx} className="flex items-start gap-2">
+                          <span className="text-red-600 font-bold">•</span>
+                          <div>
+                            <span className={`font-semibold ${indicator.severity === 'high' ? 'text-red-700' : 'text-orange-700'}`}>
+                              {indicator.indicator}
+                            </span>
+                            <span className={`ml-2 px-2 py-0.5 rounded text-xs font-bold ${
+                              indicator.severity === 'high' ? 'bg-red-200 text-red-900' : 'bg-orange-200 text-orange-900'
+                            }`}>
+                              {indicator.severity.toUpperCase()}
+                            </span>
+                            <p className="text-sm text-stone-600 mt-1 italic">&quot;...{indicator.snippet.substring(0, 150)}...&quot;</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-red-100 border border-red-300 rounded-xl p-4">
+                    <h3 className="font-bold text-red-900 mb-2">⛔ Immediate Actions Required:</h3>
+                    <ul className="space-y-1 text-red-800">
+                      <li>✓ Do NOT send any money or personal information</li>
+                      <li>✓ Do NOT click any links or download attachments</li>
+                      <li>✓ Report this to authorities immediately</li>
+                      <li>✓ Block the sender/source</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Overview */}
           <section className="mb-10">
             <h2 className="font-serif text-3xl text-stone-900 mb-4">1. Document Overview</h2>
