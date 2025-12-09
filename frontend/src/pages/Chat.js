@@ -33,6 +33,11 @@ const Chat = () => {
     }
   };
 
+  const handleNewChat = () => {
+    setMessages([]);
+    setSessionId(`session_${Date.now()}`);
+  };
+
   useEffect(() => {
     if (location.state?.initialTopic) {
       const topicMessage = `Tell me about ${location.state.initialTopic} in Germany.`;
