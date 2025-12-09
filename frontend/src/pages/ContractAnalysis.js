@@ -533,6 +533,21 @@ const ContractAnalysis = () => {
             <p className="text-stone-700 leading-relaxed">{analysis.recommendations}</p>
           </section>
 
+          {/* Key Excerpts */}
+          {analysis.key_excerpts && analysis.key_excerpts.length > 0 && (
+            <section className="mb-10">
+              <h2 className="font-serif text-3xl text-stone-900 mb-4">7. Key Excerpts from Document</h2>
+              <div className="space-y-4">
+                {analysis.key_excerpts.map((excerpt, idx) => (
+                  <div key={idx} className="p-4 bg-stone-50 border border-stone-200 rounded-xl">
+                    <p className="text-sm font-medium text-stone-500 mb-2">Excerpt {idx + 1}</p>
+                    <p className="text-stone-700 leading-relaxed italic">&quot;{excerpt}&quot;</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* Divider */}
           <hr className="my-10 border-stone-200" />
 
