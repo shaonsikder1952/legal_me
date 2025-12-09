@@ -241,11 +241,13 @@ class ContractAnalysis(BaseModel):
     extracted_text: str
     document_type: str
     risk_level: str
+    page_count: int
     clauses_safe: List[dict]
     clauses_attention: List[dict]
     clauses_violates: List[dict]
     summary: str
     recommendations: str
+    key_excerpts: List[str]
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 @api_router.get("/")
