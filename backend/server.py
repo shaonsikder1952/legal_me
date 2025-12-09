@@ -534,6 +534,140 @@ async def get_alternatives(category: str):
         return ALTERNATIVE_DATABASE[2]  # Return general resources
     return alt
 
+@api_router.get("/chat/history")
+async def get_chat_history():
+    """Get all unique chat sessions"""
+    try:
+        pipeline = [
+            {"$sort": {"timestamp": -1}},
+            {"$group": {
+                "_id": "$session_id",
+                "last_message": {"$first": "$user_message"},
+                "timestamp": {"$first": "$timestamp"}
+            }},
+            {"$sort": {"timestamp": -1}},
+            {"$limit": 50}
+        ]
+        
+        sessions = await db.chat_messages.aggregate(pipeline).to_list(50)
+        
+        result = []
+        for session in sessions:
+            result.append({
+                "session_id": session["_id"],
+                "preview": session["last_message"][:60] + "..." if len(session["last_message"]) > 60 else session["last_message"],
+                "timestamp": session["timestamp"]
+            })
+        
+        return result
+    except Exception as e:
+        logging.error(f"Chat history error: {str(e)}")
+        return []
+
+@api_router.get("/chat/{session_id}/messages")
+async def get_session_messages(session_id: str):
+    """Get all messages for a specific session"""
+    try:
+        messages = await db.chat_messages.find(
+            {"session_id": session_id},
+            {"_id": 0}
+        ).sort("timestamp", 1).to_list(1000)
+        
+        return messages
+    except Exception as e:
+        logging.error(f"Session messages error: {str(e)}")
+        return []
+
+@api_router.post("/contract/{contract_id}/chat", response_model=ChatResponse)
+async def contract_chat(contract_id: str, request: ChatRequest):
+    """Chat about a specific contract"""
+    try:
+        # Get contract analysis
+        analysis = await db.contract_analyses.find_one({"id": contract_id}, {"_id": 0})
+        if not analysis:
+            raise HTTPException(status_code=404, detail="Contract not found")
+        
+        # Create context with contract details
+        contract_context = f"""
+CONTRACT CONTEXT:
+Type: {analysis.get('document_type', 'unknown')}
+Risk Level: {analysis.get('risk_level', 'unknown')}
+Summary: {analysis.get('summary', '')}
+
+Safe Clauses: {len(analysis.get('clauses_safe', []))}
+Attention Clauses: {len(analysis.get('clauses_attention', []))}
+Violating Clauses: {len(analysis.get('clauses_violates', []))}
+
+Recommendations: {analysis.get('recommendations', '')}
+
+Contract Text (excerpt):
+{analysis.get('extracted_text', '')[:1500]}
+"""
+        
+        law_context = "\\n".join([f"- {law['title']}: {law['description']}" for law in LAW_DATABASE])
+        
+        system_message = f"""You are LegalMe, analyzing a specific contract for the user.
+
+CONTRACT YOU ARE ANALYZING:
+{contract_context}
+
+Available German laws:
+{law_context}
+
+INSTRUCTIONS:
+- Answer questions specifically about THIS contract
+- Reference the clauses, risk levels, and findings from the analysis
+- Use Cursor-style markdown formatting
+- Provide clickable HTML links
+- Be concise and helpful
+- Always end with relevant Next Steps
+
+User question: {request.message}"""
+        
+        # Initialize chat
+        chat_client = LlmChat(
+            api_key=os.environ['EMERGENT_LLM_KEY'],
+            session_id=f"contract_{contract_id}_{request.session_id}",
+            system_message=system_message
+        )
+        chat_client.with_model("gemini", "gemini-2.0-flash")
+        
+        # Send message
+        user_msg = UserMessage(text=request.message)
+        ai_response = await chat_client.send_message(user_msg)
+        
+        # Store in contract chat history
+        chat_doc = {
+            "id": str(uuid.uuid4()),
+            "contract_id": contract_id,
+            "session_id": request.session_id,
+            "user_message": request.message,
+            "ai_response": ai_response,
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+        await db.contract_chats.insert_one(chat_doc)
+        
+        return ChatResponse(response=ai_response, session_id=request.session_id)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Contract chat error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/contract/{contract_id}/chat/history")
+async def get_contract_chat_history(contract_id: str, session_id: str):
+    """Get chat history for a contract"""
+    try:
+        messages = await db.contract_chats.find(
+            {"contract_id": contract_id, "session_id": session_id},
+            {"_id": 0}
+        ).sort("timestamp", 1).to_list(1000)
+        
+        return messages
+    except Exception as e:
+        logging.error(f"Contract chat history error: {str(e)}")
+        return []
+
 app.include_router(api_router)
 
 app.add_middleware(
