@@ -999,6 +999,7 @@ RELEVANT_LAWS: [List 2-3 specific German laws being violated or relevant, in MAS
             clauses_violates=clauses_violates,
             summary=summary,
             recommendations=recommendations,
+            relevant_laws=relevant_laws,
             key_excerpts=key_excerpts
         )
         
