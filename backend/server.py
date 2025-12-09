@@ -756,13 +756,24 @@ async def analyze_contract(file: UploadFile = File(...)):
                     elif clause_pattern["risk"] == "violates":
                         clauses_violates.append(clause_info)
         
-        # Determine overall risk
-        if clauses_violates:
+        # Determine overall risk - Dynamic 5-level system
+        if is_likely_scam:
+            risk_level = "scam"
+        elif len(clauses_violates) >= 3:
             risk_level = "high"
-        elif clauses_attention:
+        elif len(clauses_violates) >= 1:
+            if len(clauses_attention) >= 2:
+                risk_level = "high"
+            else:
+                risk_level = "medium-high"
+        elif len(clauses_attention) >= 3:
             risk_level = "medium"
+        elif len(clauses_attention) >= 1:
+            risk_level = "medium-low"
         else:
             risk_level = "low"
+        
+        logging.info(f"Risk assessment: {risk_level} (Violations: {len(clauses_violates)}, Attention: {len(clauses_attention)}, Scam: {is_likely_scam})")
         
         # Generate comprehensive AI analysis using chunks
         law_context = "\n".join([f"- {law['title']}: {law['description']}" for law in LAW_DATABASE])
