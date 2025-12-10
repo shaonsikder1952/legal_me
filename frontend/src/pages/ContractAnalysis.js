@@ -305,6 +305,10 @@ const ContractAnalysis = () => {
     );
   }
 
+  // Dynamic section numbering
+  let sectionNumber = 0;
+  const getNextSectionNumber = () => ++sectionNumber;
+
   return (
     <div className="min-h-screen bg-stone-50">
       <div className="max-w-6xl mx-auto p-6 md:p-12">
