@@ -641,12 +641,17 @@ const ContractAnalysis = () => {
           {/* Relevant Laws */}
           {analysis.relevant_laws && analysis.relevant_laws.length > 0 && (
             <section className="mb-10">
-              <div className="border-t-2 border-stone-200 pt-8">
-                <h2 className="font-serif text-3xl text-stone-900 mb-4">📜 Relevant German Laws</h2>
-                <div className="bg-orange-50 border-2 border-orange-200 rounded-2xl p-6">
-                  <div className="prose prose-stone max-w-none">
-                    {analysis.relevant_laws.map((law, idx) => (
-                      <div key={idx} className="mb-2">
+              <h2 className="font-serif text-3xl text-stone-900 mb-4">{getNextSectionNumber()}. Relevant German Laws</h2>
+              <div className="bg-orange-50 border-2 border-orange-200 rounded-2xl p-6">
+                <div className="prose prose-stone max-w-none">
+                  {analysis.relevant_laws.map((law, idx) => {
+                    // Clean up the law string - remove leading * or - if present
+                    let cleanLaw = law.trim();
+                    if (cleanLaw.startsWith('*') || cleanLaw.startsWith('-')) {
+                      cleanLaw = cleanLaw.substring(1).trim();
+                    }
+                    return (
+                      <div key={idx} className="mb-3">
                         <ReactMarkdown
                           remarkPlugins={[remarkGfm]}
                           rehypePlugins={[rehypeRaw]}
@@ -654,14 +659,17 @@ const ContractAnalysis = () => {
                             a: ({node, ...props}) => (
                               <a {...props} target="_blank" rel="noopener noreferrer" className="text-orange-700 hover:underline font-semibold text-base" />
                             ),
-                            p: ({node, ...props}) => <span {...props} />
+                            p: ({node, ...props}) => <div {...props} className="flex items-start gap-2">
+                              <span className="text-orange-600 font-bold">•</span>
+                              <span className="flex-1">{props.children}</span>
+                            </div>
                           }}
                         >
-                          {law.startsWith('-') ? law : `- ${law}`}
+                          {cleanLaw}
                         </ReactMarkdown>
                       </div>
-                    ))}
-                  </div>
+                    );
+                  })}
                 </div>
               </div>
             </section>
