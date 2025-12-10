@@ -1,0 +1,14 @@
+# Railway/Nixpacks Configuration
+# Use this file if Railway's default buildpack doesn't include tesseract-ocr or poppler-utils
+
+[phases.setup]
+# Install system packages needed for OCR and PDF processing
+aptPkgs = ['tesseract-ocr', 'poppler-utils']
+
+[phases.install]
+# Install Python dependencies from requirements.txt
+cmds = ['pip install -r requirements.txt']
+
+[start]
+# Start the application using our custom start.sh script
+cmd = 'bash start.sh'
