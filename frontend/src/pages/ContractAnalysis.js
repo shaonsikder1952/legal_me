@@ -595,7 +595,7 @@ const ContractAnalysis = () => {
             <section className="mb-10">
               <h2 className="font-serif text-3xl text-stone-900 mb-4 flex items-center gap-3">
                 <span className="text-2xl">🔴</span>
-                5. Clauses That Violate German Law
+                {getNextSectionNumber()}. Clauses That Violate German Law
               </h2>
               <div className="space-y-4">
                 {analysis.clauses_violates.map((clause, idx) => (
