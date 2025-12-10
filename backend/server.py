@@ -759,7 +759,7 @@ LEGAL_CONCERNS: [List specific legal issues found, or "None" if safe]
 RISK_EXPLANATION: [2-3 sentence summary of why this risk level]"""
 
         risk_chat = LlmChat(
-            api_key=os.environ['EMERGENT_LLM_KEY'],
+            api_key=emergent_llm_key,
             session_id=f"risk_{uuid.uuid4()}",
             system_message="You are a legal risk assessment AI. Be thorough and accurate in detecting scams and legal violations."
         )
