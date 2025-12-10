@@ -535,7 +535,7 @@ const ContractAnalysis = () => {
             <section className="mb-10">
               <h2 className="font-serif text-3xl text-stone-900 mb-4 flex items-center gap-3">
                 <span className="text-2xl">🟢</span>
-                3. Clauses That Are Acceptable
+                {getNextSectionNumber()}. Clauses That Are Acceptable
               </h2>
               <div className="space-y-4">
                 {analysis.clauses_safe.map((clause, idx) => (
