@@ -946,7 +946,7 @@ KEY_EXCERPTS: [3-5 most important text excerpts from the document, each 50-100 w
 RELEVANT_LAWS: [List 2-3 specific German laws being violated or relevant, in MASKED LINK format: [§ XXX BGB – Description](URL)]"""
         
         chat_client = LlmChat(
-            api_key=os.environ['EMERGENT_LLM_KEY'],
+            api_key=emergent_llm_key,
             session_id=f"contract_{uuid.uuid4()}",
             system_message="You are a professional German legal document analyzer. Provide comprehensive analysis."
         )
