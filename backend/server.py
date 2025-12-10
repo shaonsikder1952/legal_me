@@ -34,6 +34,10 @@ if not mongo_url:
 
 db_name = os.environ.get('DB_NAME', 'legalme')
 
+emergent_llm_key = os.environ.get('EMERGENT_LLM_KEY')
+if not emergent_llm_key:
+    raise ValueError("EMERGENT_LLM_KEY environment variable is required. Please set it in your Railway dashboard.")
+
 client = AsyncIOMotorClient(mongo_url)
 db = client[db_name]
 
