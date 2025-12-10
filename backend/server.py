@@ -899,7 +899,7 @@ Identify:
 Provide brief analysis (2-3 sentences)."""
 
             chat_client = LlmChat(
-                api_key=os.environ['EMERGENT_LLM_KEY'],
+                api_key=emergent_llm_key,
                 session_id=f"analysis_chunk_{uuid.uuid4()}",
                 system_message="You are a legal document analyzer. Be concise and identify key points."
             )
