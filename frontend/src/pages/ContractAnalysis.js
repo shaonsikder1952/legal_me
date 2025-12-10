@@ -514,7 +514,7 @@ const ContractAnalysis = () => {
 
           {/* Summary */}
           <section className="mb-10">
-            <h2 className="font-serif text-3xl text-stone-900 mb-4">2. Summary</h2>
+            <h2 className="font-serif text-3xl text-stone-900 mb-4">{getNextSectionNumber()}. Summary</h2>
             <div className="prose prose-stone max-w-none">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
