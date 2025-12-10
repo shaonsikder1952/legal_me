@@ -670,7 +670,7 @@ const ContractAnalysis = () => {
           {/* Key Excerpts */}
           {analysis.key_excerpts && analysis.key_excerpts.length > 0 && (
             <section className="mb-10">
-              <h2 className="font-serif text-3xl text-stone-900 mb-4">7. Key Excerpts from Document</h2>
+              <h2 className="font-serif text-3xl text-stone-900 mb-4">{getNextSectionNumber()}. Key Excerpts from Document</h2>
               <div className="space-y-4">
                 {analysis.key_excerpts.map((excerpt, idx) => (
                   <div key={idx} className="p-4 bg-stone-50 border border-stone-200 rounded-xl">
