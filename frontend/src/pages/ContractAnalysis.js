@@ -488,7 +488,7 @@ const ContractAnalysis = () => {
 
           {/* Overview */}
           <section className="mb-10">
-            <h2 className="font-serif text-3xl text-stone-900 mb-4">1. Document Overview</h2>
+            <h2 className="font-serif text-3xl text-stone-900 mb-4">{getNextSectionNumber()}. Document Overview</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-4 bg-stone-50 rounded-xl">
                 <p className="text-sm text-stone-500 mb-1">Type</p>
