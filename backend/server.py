@@ -548,7 +548,7 @@ CRITICAL MEMORY RULES:
         
         # Initialize chat with memory
         chat_client = LlmChat(
-            api_key=os.environ['EMERGENT_LLM_KEY'],
+            api_key=emergent_llm_key,
             session_id=request.session_id,
             system_message=system_message
         )
