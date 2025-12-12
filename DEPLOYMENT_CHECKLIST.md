@@ -52,11 +52,13 @@ Since you're on Emergent platform, you need to:
 Make sure these are set in your Railway project settings:
 
 ```
-MONGO_URL=<your-mongodb-connection-string>
+MONGODB_URI=<your-mongodb-connection-string>
 DB_NAME=legalme
-EMERGENT_LLM_KEY=<your-emergent-llm-key>
+GROQ_API_KEY=<your-groq-api-key>
 CORS_ORIGINS=*
 ```
+
+**Template available at**: `/app/backend/.env.railway.template`
 
 **Note**: Railway automatically provides the `PORT` variable - you don't need to set it.
 
