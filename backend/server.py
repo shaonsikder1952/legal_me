@@ -759,11 +759,11 @@ LEGAL_CONCERNS: [List specific legal issues found, or "None" if safe]
 RISK_EXPLANATION: [2-3 sentence summary of why this risk level]"""
 
         risk_chat = LlmChat(
-            api_key=emergent_llm_key,
+            api_key=groq_api_key,
             session_id=f"risk_{uuid.uuid4()}",
             system_message="You are a legal risk assessment AI. Be thorough and accurate in detecting scams and legal violations."
         )
-        risk_chat.with_model("gemini", "gemini-2.0-flash")
+        risk_chat.with_model("groq", "llama-3.3-70b-versatile")
         
         ai_risk_response = await risk_chat.send_message(UserMessage(text=risk_assessment_prompt))
         logging.info(f"AI Risk Assessment: {ai_risk_response[:200]}...")
