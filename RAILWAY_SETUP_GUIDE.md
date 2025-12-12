@@ -102,13 +102,13 @@ curl https://your-app.railway.app/api/
 
 ## 🐛 Troubleshooting
 
-### Error: "KeyError: 'MONGO_URL'"
+### Error: "KeyError: 'MONGODB_URI'"
 **Cause**: Environment variable not set  
-**Fix**: Add `MONGO_URL` in Railway Variables tab
+**Fix**: Add `MONGODB_URI` in Railway Variables tab
 
-### Error: "KeyError: 'EMERGENT_LLM_KEY'"
+### Error: "KeyError: 'GROQ_API_KEY'"
 **Cause**: Environment variable not set  
-**Fix**: Add `EMERGENT_LLM_KEY` in Railway Variables tab
+**Fix**: Add `GROQ_API_KEY` in Railway Variables tab
 
 ### Error: "Could not find emergentintegrations"
 **Cause**: Old build cache  
