@@ -3,10 +3,12 @@
 ## Current Status
 ✅ Code is ready for deployment
 ✅ All bugs fixed (section numbering, relevant laws display)
+✅ Switched to Groq API (using llama-3.3-70b-versatile)
 ✅ Railway-specific files created:
   - `/app/backend/requirements.txt` (emergentintegrations removed)
   - `/app/backend/start.sh` (installs emergentintegrations + starts server)
   - `/app/backend/Procfile` (Railway startup command)
+  - `/app/backend/.env.railway.template` (Environment variables template)
 
 ## The Problem You're Seeing
 Railway is trying to build from the **old requirements.txt** that still contains `emergentintegrations==0.1.0`.
