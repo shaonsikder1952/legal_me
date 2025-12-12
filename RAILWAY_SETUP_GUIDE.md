@@ -44,13 +44,16 @@ CORS_ORIGINS=*
 
 ---
 
-### Step 3: Get Your Emergent LLM Key
+### Step 3: Get Your Groq API Key
 
-If you're using Emergent's universal LLM key:
-1. Log into your Emergent account
-2. Go to Profile → Universal Key
-3. Copy your key
-4. Paste it as `EMERGENT_LLM_KEY` in Railway
+To get your Groq API key:
+1. Go to [Groq Console](https://console.groq.com/)
+2. Sign up or log in
+3. Navigate to API Keys section
+4. Create a new API key
+5. Copy the key and paste it as `GROQ_API_KEY` in Railway
+
+**Model Used**: The app uses `llama-3.3-70b-versatile` (fast and high-quality)
 
 ---
 
