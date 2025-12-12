@@ -946,11 +946,11 @@ KEY_EXCERPTS: [3-5 most important text excerpts from the document, each 50-100 w
 RELEVANT_LAWS: [List 2-3 specific German laws being violated or relevant, in MASKED LINK format: [§ XXX BGB – Description](URL)]"""
         
         chat_client = LlmChat(
-            api_key=emergent_llm_key,
+            api_key=groq_api_key,
             session_id=f"contract_{uuid.uuid4()}",
             system_message="You are a professional German legal document analyzer. Provide comprehensive analysis."
         )
-        chat_client.with_model("gemini", "gemini-2.0-flash")
+        chat_client.with_model("groq", "llama-3.3-70b-versatile")
         
         ai_analysis = await chat_client.send_message(UserMessage(text=merged_prompt))
         
