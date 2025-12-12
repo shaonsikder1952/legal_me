@@ -143,8 +143,8 @@ curl https://your-app.railway.app/api/
 ## 🎯 Quick Checklist
 
 Before deploying, ensure:
-- [ ] `MONGO_URL` is set in Railway
-- [ ] `EMERGENT_LLM_KEY` is set in Railway
+- [ ] `MONGODB_URI` is set in Railway
+- [ ] `GROQ_API_KEY` is set in Railway
 - [ ] `DB_NAME` is set (or use default "legalme")
 - [ ] Code is pushed to GitHub
 - [ ] Railway is connected to your GitHub repo
