@@ -175,9 +175,18 @@ If you've set all environment variables and the app still won't start:
 ## ✨ Summary
 
 Your app is **ready to deploy** once you:
-1. ✅ Set `MONGO_URL` in Railway Variables
-2. ✅ Set `EMERGENT_LLM_KEY` in Railway Variables
-3. ✅ Push code to GitHub
-4. ✅ Railway will auto-deploy
+1. ✅ Set `MONGODB_URI` in Railway Variables
+2. ✅ Set `GROQ_API_KEY` in Railway Variables  
+3. ✅ Set `DB_NAME=legalme` in Railway Variables (optional, defaults to "legalme")
+4. ✅ Push code to GitHub
+5. ✅ Railway will auto-deploy
 
-**The crash you're seeing is normal** - the app cannot start without database credentials. This is a security feature! Once you add the variables, deployment will succeed. 🚀
+**The crash you're seeing is normal** - the app cannot start without database credentials and API keys. This is a security feature! Once you add the variables, deployment will succeed. 🚀
+
+## 🤖 LLM Configuration
+
+The app now uses **Groq's Llama 3.3 70B** model (`llama-3.3-70b-versatile`):
+- ⚡ Extremely fast inference
+- 🎯 High quality responses
+- 💰 Cost-effective
+- 🔒 Your own API key (no shared credits)
