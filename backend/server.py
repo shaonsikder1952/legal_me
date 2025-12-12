@@ -1225,11 +1225,11 @@ User's current question: {request.message}"""
         
         # Initialize chat with memory
         chat_client = LlmChat(
-            api_key=emergent_llm_key,
+            api_key=groq_api_key,
             session_id=f"contract_{contract_id}_{request.session_id}",
             system_message=system_message
         )
-        chat_client.with_model("gemini", "gemini-2.0-flash")
+        chat_client.with_model("groq", "llama-3.3-70b-versatile")
         
         # Send message
         user_msg = UserMessage(text=request.message)
