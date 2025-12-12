@@ -899,11 +899,11 @@ Identify:
 Provide brief analysis (2-3 sentences)."""
 
             chat_client = LlmChat(
-                api_key=emergent_llm_key,
+                api_key=groq_api_key,
                 session_id=f"analysis_chunk_{uuid.uuid4()}",
                 system_message="You are a legal document analyzer. Be concise and identify key points."
             )
-            chat_client.with_model("gemini", "gemini-2.0-flash")
+            chat_client.with_model("groq", "llama-3.3-70b-versatile")
             
             chunk_analysis = await chat_client.send_message(UserMessage(text=chunk_prompt))
             chunk_analyses.append(f"Section {i+1}: {chunk_analysis}")
