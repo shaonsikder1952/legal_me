@@ -14,9 +14,9 @@ Go to your Railway project dashboard → **Variables** tab, and add these:
 
 #### Required Variables:
 ```
-MONGO_URL=mongodb+srv://username:password@cluster.mongodb.net/
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/
 DB_NAME=legalme
-EMERGENT_LLM_KEY=your_emergent_key_here
+GROQ_API_KEY=your_groq_api_key_here
 ```
 
 #### Optional Variables (with defaults):
