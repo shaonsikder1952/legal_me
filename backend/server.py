@@ -28,17 +28,17 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 # Get environment variables with better error handling
-mongo_url = os.environ.get('MONGO_URL')
-if not mongo_url:
-    raise ValueError("MONGO_URL environment variable is required. Please set it in your Railway dashboard.")
+mongodb_uri = os.environ.get('MONGODB_URI')
+if not mongodb_uri:
+    raise ValueError("MONGODB_URI environment variable is required. Please set it in your Railway dashboard.")
 
 db_name = os.environ.get('DB_NAME', 'legalme')
 
-emergent_llm_key = os.environ.get('EMERGENT_LLM_KEY')
-if not emergent_llm_key:
-    raise ValueError("EMERGENT_LLM_KEY environment variable is required. Please set it in your Railway dashboard.")
+groq_api_key = os.environ.get('GROQ_API_KEY')
+if not groq_api_key:
+    raise ValueError("GROQ_API_KEY environment variable is required. Please set it in your Railway dashboard.")
 
-client = AsyncIOMotorClient(mongo_url)
+client = AsyncIOMotorClient(mongodb_uri)
 db = client[db_name]
 
 app = FastAPI()
